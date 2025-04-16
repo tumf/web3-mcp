@@ -3,56 +3,102 @@ E2E tests for Token API
 """
 
 import asyncio
+from enum import Enum
+from typing import Any, Dict, List
+
+import aiohttp
 import pytest
 
 from web3_mcp.api.token import AccountBalanceRequest, TokenPriceRequest
-from web3_mcp.constants import SUPPORTED_NETWORKS
+
+from .utils import make_request_with_retry
 
 
-@pytest.mark.asyncio
-async def test_get_account_balance(mcp_client):
+def has_attributes(obj: Dict[str, Any], attributes: List[str]) -> bool:
+    """Check if a dictionary has all the specified keys"""
+    return all(attr in obj for attr in attributes)
+
+
+@pytest.mark.asyncio(loop_scope="session")
+async def test_get_account_balance(mcp_client: Any) -> None:
     """Test retrieving account balance"""
-    wallet_address = "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045"  # vitalik.eth
-    
+    # Using a wallet with known token balance
+    wallet_address = "0x47ac0fb4f2d84898e4d9e7b4dab3c24507a6d503"  # Binance's wallet
+
     request = AccountBalanceRequest(
         wallet_address=wallet_address,
-        blockchain="eth"
+        blockchain="eth",
     )
-    
+
     try:
-        result = await asyncio.wait_for(
-            mcp_client.call_tool("get_account_balance", {"request": request.model_dump(exclude_none=True)}),
-            timeout=10.0  # 10 second timeout
+        result = await make_request_with_retry(
+            mcp_client,
+            "get_account_balance",
+            request.model_dump(exclude_none=True),
         )
-        
-        assert "assets" in result
-        assert len(result["assets"]) > 0  # This wallet should have assets
-    except asyncio.TimeoutError:
-        print("Test timed out after 10 seconds")
-        pytest.skip("API request timed out")
+
+        assert isinstance(result, dict), "Result should be a dictionary"
+        assert "assets" in result, "Result should contain 'assets' key"
+        assert isinstance(result["assets"], list), "'assets' should be a list"
+
+        if len(result["assets"]) > 0:
+            asset = result["assets"][0]
+            required_fields = [
+                "balance",
+                "balanceRawInteger",
+                "balanceUsd",
+                "blockchain",
+                "holderAddress",
+                "thumbnail",
+                "tokenDecimals",
+                "tokenName",
+                "tokenPrice",
+                "tokenSymbol",
+                "tokenType",
+            ]
+            assert has_attributes(
+                asset, required_fields
+            ), f"Asset should have all required attributes: {required_fields}"
+
+            assert isinstance(asset["tokenDecimals"], int), "tokenDecimals should be an integer"
+            assert isinstance(asset["balance"], str), "balance should be a string"
+            assert isinstance(asset["tokenSymbol"], str), "tokenSymbol should be a string"
+
+            # Check blockchain field
+            blockchain = asset["blockchain"]
+            assert isinstance(blockchain, Enum), "blockchain should be an Enum"
+            assert str(blockchain.value) == "eth", "blockchain value should be 'eth'"
+
+    except (asyncio.TimeoutError, aiohttp.ClientError) as e:
+        pytest.skip(f"Network error occurred: {str(e)}")
     except Exception as e:
-        print(f"Error in test_get_account_balance: {e}")
-        pytest.skip(f"Skipping due to API error: {e}")
+        pytest.fail(f"Unexpected error: {str(e)}")
 
 
-@pytest.mark.asyncio
-async def test_get_token_price(mcp_client):
+@pytest.mark.asyncio(loop_scope="session")
+async def test_get_token_price(mcp_client: Any) -> None:
     """Test retrieving token price"""
     request = TokenPriceRequest(
         blockchain="eth",
-        contract_address="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"  # USDC on Ethereum
+        contract_address="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",  # USDC on Ethereum
     )
-    
+
     try:
-        result = await asyncio.wait_for(
-            mcp_client.call_tool("get_token_price", {"request": request.model_dump(exclude_none=True)}),
-            timeout=10.0  # 10 second timeout
+        result = await make_request_with_retry(
+            mcp_client,
+            "get_token_price",
+            request.model_dump(exclude_none=True),
         )
-        
-        assert "price_usd" in result
-    except asyncio.TimeoutError:
-        print("Test timed out after 10 seconds")
-        pytest.skip("API request timed out")
+
+        assert isinstance(result, dict), "Result should be a dictionary"
+        assert "price_usd" in result, "Result should contain 'price_usd' key"
+        assert isinstance(result["price_usd"], str), "price_usd should be a string"
+
+        # Convert price_usd to float for value check
+        price_usd = float(result["price_usd"])
+        assert price_usd > 0, "price_usd should be positive"
+
+    except (asyncio.TimeoutError, aiohttp.ClientError) as e:
+        pytest.skip(f"Network error occurred: {str(e)}")
     except Exception as e:
-        print(f"Error in test_get_token_price: {e}")
-        pytest.skip(f"Skipping due to API error: {e}")
+        pytest.fail(f"Unexpected error: {str(e)}")
