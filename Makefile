@@ -126,7 +126,7 @@ bump-beta:
 
 # E2E Testing
 e2e-test:
-	./e2e_tests/run_tests.sh
+	dotenvx run -f ${ENV_FILE:-.env} -- python -m pytest e2e_tests -v
 
 e2e-test-mock:
-	./e2e_tests/run_mock_tests.sh
+	dotenvx run -f ${ENV_FILE:-.env} -- python -m pytest e2e_tests/test_mock.py -v
