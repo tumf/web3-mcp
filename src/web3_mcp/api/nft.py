@@ -73,19 +73,19 @@ class NFTApi:
     async def get_nfts_by_owner(self, request: NFTByOwnerRequest) -> Dict[str, Any]:
         """Get NFTs owned by a wallet address"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.get_nfts_by_owner(**params)
+        return await self.client.nft.get_nfts_by_owner(**params)
 
     async def get_nft_metadata(self, request: NFTMetadataRequest) -> Dict[str, Any]:
         """Get metadata for a specific NFT"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.get_nft_metadata(**params)
+        return await self.client.nft.get_nft_metadata(**params)
 
     async def get_nft_holders(self, request: NFTHoldersRequest) -> Dict[str, Any]:
         """Get holders of a specific NFT collection"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.get_nft_holders(**params)
+        return await self.client.nft.get_nft_holders(**params)
 
     async def get_nft_transfers(self, request: NFTTransfersRequest) -> Dict[str, Any]:
         """Get transfer history for NFTs"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.get_nft_transfers(**params)
+        return await self.client.nft.get_nft_transfers(**params)
