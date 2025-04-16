@@ -42,17 +42,17 @@ export ANKR_PRIVATE_KEY="your_private_key"
 ### Running the server
 
 ```python
-from web3_mcp.server import FastMCP
+from web3_mcp.server import init_server
 
-# Create server
-server = FastMCP(
-    name="Ankr FastMCP",
+# Initialize MCP server
+mcp = init_server(
+    name="Ankr MCP",
     endpoint="your_ankr_endpoint",  # Optional, defaults to ANKR_ENDPOINT env var
     private_key="your_private_key"  # Optional, defaults to ANKR_PRIVATE_KEY env var
 )
 
 # Run server
-server.run()
+mcp.run()
 ```
 
 ### Using with FastMCP CLI
