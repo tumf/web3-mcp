@@ -68,6 +68,13 @@ def mcp_server() -> Generator[object, None, None]:
 @pytest_asyncio.fixture
 async def mcp_client(mcp_server):
     """Initialize an MCP client for making requests to the server"""
-    from e2e_tests.test_mock import MockClient
-    client = MockClient()
-    yield client
+    try:
+        client = Client("http://127.0.0.1:8000")
+        async with client:
+            yield client
+    except Exception as e:
+        print(f"Failed to connect to real API: {e}")
+        print("Falling back to mock client")
+        from e2e_tests.test_mock import MockClient
+        client = MockClient()
+        yield client
