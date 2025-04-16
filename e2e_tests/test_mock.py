@@ -6,8 +6,7 @@ import asyncio
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
 
-from fastmcp import Client, Schema
-from web3_mcp.server import init_server
+from fastmcp import Client
 
 
 class MockClient:
