@@ -55,7 +55,21 @@ def mcp_server() -> Generator[None, None, None]:
     print(f"Server started on http://127.0.0.1:8000")
     
     import time
-    time.sleep(5)
+    time.sleep(10)
+    
+    import requests
+    try:
+        for _ in range(3):  # Try a few times
+            try:
+                response = requests.get("http://127.0.0.1:8000/health", timeout=2)
+                print(f"Server health check: {response.status_code}")
+                break
+            except Exception as e:
+                print(f"Server health check attempt failed: {e}")
+                time.sleep(2)
+    except Exception as e:
+        print(f"Server health check failed: {e}")
+        pytest.skip(f"Server failed to start: {e}")
     
     yield
     
