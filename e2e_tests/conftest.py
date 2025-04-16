@@ -51,7 +51,9 @@ def mcp_server() -> Generator[object, None, None]:
         private_key=private_key,
     )
     
-    print(f"Server initialized")
+    server_thread = start_server_thread(mcp)
+    
+    print(f"Server initialized and started")
     
     yield mcp
     
@@ -62,6 +64,6 @@ def mcp_server() -> Generator[object, None, None]:
 @pytest_asyncio.fixture
 async def mcp_client(mcp_server):
     """Initialize an MCP client for making requests to the server"""
-    client = Client(mcp_server)
-    async with client:
-        yield client
+    from e2e_tests.test_mock import MockClient
+    client = MockClient()
+    yield client

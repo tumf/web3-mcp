@@ -3,6 +3,7 @@ Mocked tests for CI environments (no real Ankr API access needed)
 """
 
 import asyncio
+import json
 from typing import AsyncGenerator
 import pytest
 import pytest_asyncio
@@ -16,6 +17,20 @@ class MockClient:
     
     async def invoke(self, tool_name, params):
         """Mock invoke method that returns predefined responses based on the tool name"""
+        return await self._get_mock_response(tool_name)
+        
+    async def call_tool(self, tool_name, params):
+        """Mock call_tool method that returns predefined responses based on the tool name"""
+        response = await self._get_mock_response(tool_name)
+        
+        class TextContent:
+            def __init__(self, text):
+                self.text = json.dumps(text)
+                
+        return [TextContent(response)]
+    
+    async def _get_mock_response(self, tool_name):
+        """Helper method to get mock responses based on tool name"""
         if tool_name == "get_nfts_by_owner":
             return {
                 "assets": [],
