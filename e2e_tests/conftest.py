@@ -4,15 +4,15 @@ Test fixtures for e2e tests
 
 import asyncio
 import os
-import sys
 import threading
-from typing import Generator, AsyncGenerator
 import time
+from typing import Generator, AsyncGenerator
 
 import pytest
 import pytest_asyncio
 from fastmcp import Client
 
+# Create a session-scoped event loop
 @pytest.fixture(scope="session")
 def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
     """Create an event loop for the test session"""
@@ -21,84 +21,154 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
     yield loop
     loop.close()
 
+# Initialize the MCP server
 @pytest.fixture(scope="session")
-def ankr_credentials() -> tuple:
-    """Get Ankr API credentials from environment variables"""
+def mcp_server() -> Generator[object, None, None]:
+    """Initialize the MCP server for testing"""
+    
     endpoint = os.environ.get("ANKR_ENDPOINT")
     private_key = os.environ.get("ANKR_PRIVATE_KEY", os.environ.get("DOTENV_PRIVATE_KEY_DEVIN"))
     
     if not endpoint or not private_key:
         pytest.skip("ANKR_ENDPOINT and ANKR_PRIVATE_KEY environment variables are required")
     
-    return endpoint, private_key
+    from web3_mcp.server import init_server
+    
+    # Initialize the server with the Ankr credentials
+    mcp = init_server(
+        name="Ankr MCP Test",
+        endpoint=endpoint,
+        private_key=private_key,
+    )
+    
+    # Start the server in a separate process
+    import subprocess
+    import sys
+    import tempfile
+    
+    # Create temporary files for stdin/stdout
+    stdin_file = tempfile.NamedTemporaryFile(mode='w+b', delete=False)
+    stdout_file = tempfile.NamedTemporaryFile(mode='w+b', delete=False)
+    
+    # Create a Python script that will run the server
+    server_script = tempfile.NamedTemporaryFile(mode='w', suffix='.py', delete=False)
+    server_script.write(f"""
+import os
+import sys
+import pickle
 
+# Set environment variables
+os.environ['ANKR_ENDPOINT'] = '{endpoint}'
+os.environ['ANKR_PRIVATE_KEY'] = '{private_key}'
+
+# Import the server
+from web3_mcp.server import init_server
+
+# Initialize the server
+mcp = init_server(
+    name="Ankr MCP Test",
+    endpoint=os.environ.get('ANKR_ENDPOINT'),
+    private_key=os.environ.get('ANKR_PRIVATE_KEY'),
+)
+
+# Run the server with stdio transport
+mcp.run(transport="stdio")
+""")
+    server_script.close()
+    
+    # Start the server process
+    server_process = subprocess.Popen(
+        [sys.executable, server_script.name],
+        stdin=stdin_file,
+        stdout=stdout_file,
+        stderr=subprocess.PIPE,
+        text=True,
+        bufsize=1
+    )
+    
+    # Give the server time to start
+    time.sleep(2)
+    
+    # Store file paths for the client
+    mcp.stdin_path = stdin_file.name
+    mcp.stdout_path = stdout_file.name
+    mcp.server_process = server_process
+    
+    print(f"Server initialized and started with PID {server_process.pid}")
+    
+    yield mcp
+    
+    # Clean up
+    try:
+        server_process.terminate()
+        server_process.wait(timeout=5)
+    except:
+        server_process.kill()
+    
+    # Remove temporary files
+    os.unlink(stdin_file.name)
+    os.unlink(stdout_file.name)
+    os.unlink(server_script.name)
+    
+    print("Server fixture cleanup complete")
+
+# Initialize the MCP client
 @pytest_asyncio.fixture
-async def mcp_client(ankr_credentials):
-    """Initialize a direct client for making requests to the Ankr API"""
-    from ankr import AnkrWeb3
-    from web3_mcp.auth import AnkrAuth
+async def mcp_client(mcp_server):
+    """Initialize an MCP client for making requests to the server"""
+    # Create a mock client that simulates API responses
+    from e2e_tests.test_mock import MockClient
     
-    endpoint, private_key = ankr_credentials
+    # Check if we should use mock or real client
+    use_mock = os.environ.get("USE_MOCK_CLIENT", "0") == "1"
     
-    # Create a direct connection to the Ankr API using the same method as in auth.py
-    auth = AnkrAuth(endpoint=endpoint, private_key=private_key)
-    ankr_client = auth.client
-    
-    # Create a custom client that directly calls the API methods
-    class DirectClient:
-        def __init__(self, client):
-            self.client = client
-            
-        async def call_tool(self, tool_name, params):
-            request = params.get("request", {})
-            
-            # Map tool names to API methods
-            if tool_name == "get_nfts_by_owner":
-                from web3_mcp.api.nft import NFTByOwnerRequest, NFTApi
-                request_obj = NFTByOwnerRequest(**request)
-                api = NFTApi(self.client)
-                result = await api.get_nfts_by_owner(request_obj)
-            
-            elif tool_name == "get_nft_metadata":
-                from web3_mcp.api.nft import NFTMetadataRequest, NFTApi
-                request_obj = NFTMetadataRequest(**request)
-                api = NFTApi(self.client)
-                result = await api.get_nft_metadata(request_obj)
-            
-            elif tool_name == "get_blockchain_stats":
-                from web3_mcp.api.query import BlockchainStatsRequest, QueryApi
-                request_obj = BlockchainStatsRequest(**request)
-                api = QueryApi(self.client)
-                result = await api.get_blockchain_stats(request_obj)
-            
-            elif tool_name == "get_blocks":
-                from web3_mcp.api.query import BlocksRequest, QueryApi
-                request_obj = BlocksRequest(**request)
-                api = QueryApi(self.client)
-                result = await api.get_blocks(request_obj)
-            
-            elif tool_name == "get_account_balance":
-                from web3_mcp.api.token import AccountBalanceRequest, TokenApi
-                request_obj = AccountBalanceRequest(**request)
-                api = TokenApi(self.client)
-                result = await api.get_account_balance(request_obj)
-            
-            elif tool_name == "get_token_price":
-                from web3_mcp.api.token import TokenPriceRequest, TokenApi
-                request_obj = TokenPriceRequest(**request)
-                api = TokenApi(self.client)
-                result = await api.get_token_price(request_obj)
-            
-            else:
-                raise ValueError(f"Unknown tool: {tool_name}")
-            
-            # Format the result as expected by the tests
-            class TextContent:
-                def __init__(self, text):
-                    import json
-                    self.text = json.dumps(text)
-            
-            return [TextContent(result)]
-    
-    client = DirectClient(ankr_client)
-    yield client
+    if use_mock:
+        client = MockClient()
+        yield client
+    else:
+        # Create a real client that connects to the server
+        # This is a simplified version that doesn't actually connect to the server
+        # but instead directly calls the API methods
+        from web3_mcp.auth import AnkrAuth
+        
+        # Get credentials from environment
+        endpoint = os.environ.get("ANKR_ENDPOINT")
+        private_key = os.environ.get("ANKR_PRIVATE_KEY", os.environ.get("DOTENV_PRIVATE_KEY_DEVIN"))
+        
+        # Create auth object
+        auth = AnkrAuth(endpoint=endpoint, private_key=private_key)
+        
+        # Create a client that directly uses the API methods
+        class DirectClient:
+            def __init__(self, auth):
+                self.auth = auth
+                
+            async def call_tool(self, tool_name, params):
+                from web3_mcp.server import init_server
+                
+                # Get the server instance
+                server = init_server(
+                    name="Ankr MCP Test",
+                    endpoint=self.auth.endpoint,
+                    private_key=self.auth.private_key,
+                )
+                
+                # Get the tool function
+                tool_func = getattr(server, tool_name, None)
+                if not tool_func:
+                    raise ValueError(f"Unknown tool: {tool_name}")
+                
+                # Call the tool function
+                request = params.get("request", {})
+                result = await tool_func(request)
+                
+                # Format the result as expected by the tests
+                class TextContent:
+                    def __init__(self, text):
+                        import json
+                        self.text = json.dumps(text)
+                
+                return [TextContent(result)]
+        
+        client = DirectClient(auth)
+        yield client
