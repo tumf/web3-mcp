@@ -74,18 +74,20 @@ class NFTApi:
         """Get NFTs owned by a wallet address"""
         from ankr.types import GetNFTsByOwnerRequest
         
-        params = {
-            "walletAddress": request.wallet_address,
-            "blockchain": request.blockchain
-        }
+        wallet_address = request.wallet_address
+        blockchain = request.blockchain if request.blockchain else None
+        page_token = request.page_token if request.page_token else None
+        
+        ankr_request = GetNFTsByOwnerRequest(
+            walletAddress=wallet_address,
+            blockchain=blockchain
+        )
         
         if request.page_size is not None:
-            params["pageSize"] = request.page_size
+            ankr_request.pageSize = request.page_size
             
-        if request.page_token:
-            params["pageToken"] = request.page_token
-        
-        ankr_request = GetNFTsByOwnerRequest(**params)
+        if page_token:
+            ankr_request.pageToken = page_token
         
         result = self.client.nft.get_nfts(ankr_request)
         assets = list(result) if result else []

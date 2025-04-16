@@ -84,5 +84,4 @@ def mcp_server() -> Generator[object, None, None]:
 async def mcp_client(mcp_server):
     """Initialize an MCP client for making requests to the server"""
     client = Client(transport=mcp_server)
-    async with client:
-        yield client
+    yield client
