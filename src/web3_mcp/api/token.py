@@ -69,7 +69,7 @@ class TokenApi:
         from ankr.types import GetAccountBalanceRequest
         
         ankr_request = GetAccountBalanceRequest(
-            walletAddress=request.wallet_address,
+            wallet_address=request.wallet_address,
             blockchain=request.blockchain
         )
         
@@ -84,8 +84,8 @@ class TokenApi:
         
         ankr_request = GetCurrenciesRequest(
             blockchain=request.blockchain,
-            pageToken=request.page_token,
-            pageSize=request.page_size
+            page_token=request.page_token,
+            page_size=request.page_size
         )
         
         result = self.client.token.get_currencies(ankr_request)
@@ -99,7 +99,7 @@ class TokenApi:
         
         ankr_request = GetTokenPriceRequest(
             blockchain=request.blockchain,
-            contractAddress=request.contract_address
+            contract_address=request.contract_address
         )
         
         result = self.client.token.get_token_price(ankr_request)
@@ -113,9 +113,9 @@ class TokenApi:
         
         ankr_request = GetTokenHoldersRequest(
             blockchain=request.blockchain,
-            contractAddress=request.contract_address,
-            pageToken=request.page_token,
-            pageSize=request.page_size
+            contract_address=request.contract_address,
+            page_token=request.page_token,
+            page_size=request.page_size
         )
         
         result = self.client.token.get_token_holders(ankr_request)
@@ -131,7 +131,7 @@ class TokenApi:
         
         ankr_request = GetTokenHoldersCountRequest(
             blockchain=request.blockchain,
-            contractAddress=request.contract_address
+            contract_address=request.contract_address
         )
         
         result = self.client.token.get_token_holders_count(ankr_request)
@@ -145,12 +145,12 @@ class TokenApi:
         
         ankr_request = GetTokenTransfersRequest(
             blockchain=request.blockchain,
-            contractAddress=request.contract_address,
-            walletAddress=request.wallet_address,
-            fromBlock=request.from_block,
-            toBlock=request.to_block,
-            pageToken=request.page_token,
-            pageSize=request.page_size
+            contract_address=request.contract_address,
+            wallet_address=request.wallet_address,
+            from_block=request.from_block,
+            to_block=request.to_block,
+            page_token=request.page_token,
+            page_size=request.page_size
         )
         
         result = self.client.token.get_token_transfers(ankr_request)
