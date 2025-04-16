@@ -1,4 +1,4 @@
-.PHONY: lint format test clean install update fix-lint build publish test-publish coverage bump-patch bump-minor bump-major
+.PHONY: lint format test clean install update fix-lint build publish test-publish coverage bump-patch bump-minor bump-major e2e-test e2e-test-mock
 
 # Python version
 PYTHON := python3
@@ -123,3 +123,10 @@ bump-major:
 bump-beta:
 	$(eval NEW_VERSION := $(VERSION_BASE)-beta)
 	$(call update_version,$(NEW_VERSION))
+
+# E2E Testing
+e2e-test:
+	dotenvx run -f .env.devin -- pytest e2e_tests -v
+
+e2e-test-mock:
+	pytest e2e_tests/test_mock.py -v

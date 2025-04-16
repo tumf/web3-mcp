@@ -1,0 +1,38 @@
+"""
+E2E tests for Query API
+"""
+
+import pytest
+
+from web3_mcp.api.query import BlockchainStatsRequest, BlocksRequest
+from web3_mcp.constants import SUPPORTED_NETWORKS
+
+
+@pytest.mark.asyncio
+async def test_get_blockchain_stats(mcp_client):
+    """Test retrieving blockchain statistics"""
+    for blockchain in ["eth", "bsc"]:  # Test a subset of supported chains
+        request = BlockchainStatsRequest(
+            blockchain=blockchain
+        )
+        
+        result = await mcp_client.invoke("get_blockchain_stats", request.model_dump(exclude_none=True))
+        
+        assert "last_block_number" in result
+        assert "transactions" in result
+
+
+@pytest.mark.asyncio
+async def test_get_blocks(mcp_client):
+    """Test retrieving blocks"""
+    request = BlocksRequest(
+        blockchain="eth",
+        page_size=2,
+        descending_order=True
+    )
+    
+    result = await mcp_client.invoke("get_blocks", request.model_dump(exclude_none=True))
+    
+    assert "blocks" in result
+    assert len(result["blocks"]) <= 2  # Should respect page_size
+    assert "next_page_token" in result
