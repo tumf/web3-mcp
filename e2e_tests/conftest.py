@@ -35,17 +35,19 @@ def ankr_credentials() -> tuple:
 @pytest_asyncio.fixture
 async def mcp_client(ankr_credentials):
     """Initialize a direct client for making requests to the Ankr API"""
-    from ankr import AnkrProvider
+    from ankr import AnkrWeb3
+    from web3_mcp.auth import AnkrAuth
     
     endpoint, private_key = ankr_credentials
     
-    # Create a direct connection to the Ankr API
-    ankr_provider = AnkrProvider(endpoint=endpoint, private_key=private_key)
+    # Create a direct connection to the Ankr API using the same method as in auth.py
+    auth = AnkrAuth(endpoint=endpoint, private_key=private_key)
+    ankr_client = auth.client
     
     # Create a custom client that directly calls the API methods
     class DirectClient:
-        def __init__(self, provider):
-            self.provider = provider
+        def __init__(self, client):
+            self.client = client
             
         async def call_tool(self, tool_name, params):
             request = params.get("request", {})
@@ -54,37 +56,37 @@ async def mcp_client(ankr_credentials):
             if tool_name == "get_nfts_by_owner":
                 from web3_mcp.api.nft import NFTByOwnerRequest, NFTApi
                 request_obj = NFTByOwnerRequest(**request)
-                api = NFTApi(self.provider)
+                api = NFTApi(self.client)
                 result = await api.get_nfts_by_owner(request_obj)
             
             elif tool_name == "get_nft_metadata":
                 from web3_mcp.api.nft import NFTMetadataRequest, NFTApi
                 request_obj = NFTMetadataRequest(**request)
-                api = NFTApi(self.provider)
+                api = NFTApi(self.client)
                 result = await api.get_nft_metadata(request_obj)
             
             elif tool_name == "get_blockchain_stats":
                 from web3_mcp.api.query import BlockchainStatsRequest, QueryApi
                 request_obj = BlockchainStatsRequest(**request)
-                api = QueryApi(self.provider)
+                api = QueryApi(self.client)
                 result = await api.get_blockchain_stats(request_obj)
             
             elif tool_name == "get_blocks":
                 from web3_mcp.api.query import BlocksRequest, QueryApi
                 request_obj = BlocksRequest(**request)
-                api = QueryApi(self.provider)
+                api = QueryApi(self.client)
                 result = await api.get_blocks(request_obj)
             
             elif tool_name == "get_account_balance":
                 from web3_mcp.api.token import AccountBalanceRequest, TokenApi
                 request_obj = AccountBalanceRequest(**request)
-                api = TokenApi(self.provider)
+                api = TokenApi(self.client)
                 result = await api.get_account_balance(request_obj)
             
             elif tool_name == "get_token_price":
                 from web3_mcp.api.token import TokenPriceRequest, TokenApi
                 request_obj = TokenPriceRequest(**request)
-                api = TokenApi(self.provider)
+                api = TokenApi(self.client)
                 result = await api.get_token_price(request_obj)
             
             else:
@@ -98,5 +100,5 @@ async def mcp_client(ankr_credentials):
             
             return [TextContent(result)]
     
-    client = DirectClient(ankr_provider)
+    client = DirectClient(ankr_client)
     yield client
