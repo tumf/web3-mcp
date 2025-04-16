@@ -43,8 +43,6 @@ def mcp_server() -> Generator[None, None, None]:
     if not endpoint or not private_key:
         pytest.skip("ANKR_ENDPOINT and ANKR_PRIVATE_KEY environment variables are required")
     
-    pytest.skip("Skipping real API tests - using mock tests instead")
-    
     from web3_mcp.server import init_server
     
     mcp = init_server(
