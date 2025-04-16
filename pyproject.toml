@@ -3,7 +3,7 @@ name = "web3-mcp"
 version = "0.1.0"
 description = "FactMCP server wrapping Ankr Advanced API"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "ankr-sdk>=1.0.2",
     "fastmcp>=2.1.2",
@@ -25,7 +25,7 @@ build-backend = "hatchling.build"
 
 [tool.black]
 line-length = 100
-target-version = ["py313"]
+target-version = ["py312"]
 
 [tool.isort]
 profile = "black"
@@ -33,10 +33,10 @@ line_length = 100
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py312"
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
