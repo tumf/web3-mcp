@@ -126,7 +126,7 @@ bump-beta:
 
 # E2E Testing
 e2e-test:
-	dotenvx run -f .env.devin -- pytest e2e_tests -v
+	pytest e2e_tests -v
 
 e2e-test-mock:
 	pytest e2e_tests/test_mock.py -v
