@@ -17,7 +17,7 @@ from fastmcp import Client
 
 def start_server_thread(mcp) -> threading.Thread:
     """Start the MCP server in a separate thread"""
-    thread = threading.Thread(target=mcp.run, kwargs={"host": "127.0.0.1", "port": 8000})
+    thread = threading.Thread(target=mcp.run)  # MCP server uses stdio, not HTTP
     thread.daemon = True
     thread.start()
     time.sleep(2)  # Give the server time to start
