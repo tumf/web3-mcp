@@ -19,7 +19,22 @@ def start_server_thread(mcp) -> threading.Thread:
     """Start the MCP server in a separate thread"""
     def run_server():
         import sys
-        mcp.run(transport="stdio")
+        import os
+        r_pipe, w_pipe = os.pipe()
+        old_stdin, old_stdout = sys.stdin, sys.stdout
+        
+        r_file = os.fdopen(r_pipe, 'r')
+        w_file = os.fdopen(w_pipe, 'w')
+        
+        sys.stdin = r_file
+        sys.stdout = w_file
+        
+        try:
+            mcp.run(transport="stdio")
+        finally:
+            sys.stdin, sys.stdout = old_stdin, old_stdout
+            r_file.close()
+            w_file.close()
         
     thread = threading.Thread(target=run_server)
     thread.daemon = True
