@@ -94,14 +94,26 @@ class QueryApi:
         """Get blocks information"""
         from ankr.types import GetBlocksRequest
         
-        ankr_request = GetBlocksRequest(
-            blockchain=request.blockchain,
-            fromBlock=request.from_block,
-            toBlock=request.to_block,
-            descOrder=request.descending_order,
-            pageToken=request.page_token,
-            pageSize=request.page_size
-        )
+        params = {
+            "blockchain": request.blockchain
+        }
+        
+        if request.from_block is not None:
+            params["fromBlock"] = request.from_block
+            
+        if request.to_block is not None:
+            params["toBlock"] = request.to_block
+            
+        if request.descending_order is not None:
+            params["descendingOrder"] = request.descending_order
+            
+        if request.page_size is not None:
+            params["pageSize"] = request.page_size
+            
+        if request.page_token:
+            params["pageToken"] = request.page_token
+        
+        ankr_request = GetBlocksRequest(**params)
         
         result = self.client.query.get_blocks(ankr_request)
         if hasattr(result, "__dict__"):
