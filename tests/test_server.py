@@ -1,12 +1,12 @@
 """
-Tests for FactMCP server
+Tests for FastMCP server
 """
 
 import os
 import pytest
 from unittest.mock import patch, MagicMock
 
-from web3_mcp.server import FactMCP
+from web3_mcp.server import FastMCP
 from web3_mcp.constants import SUPPORTED_NETWORKS
 
 @pytest.fixture
@@ -19,7 +19,7 @@ def mock_ankr_web3():
 
 def test_server_initialization(mock_ankr_web3):
     """Test server initialization"""
-    server = FactMCP(
+    server = FastMCP(
         name="Test Server",
         endpoint="https://test.endpoint",
         private_key="test_key"
@@ -34,7 +34,7 @@ def test_server_initialization(mock_ankr_web3):
 def test_utility_tools():
     """Test utility tools"""
     with patch("web3_mcp.auth.AnkrWeb3"):
-        server = FactMCP(
+        server = FastMCP(
             name="Test Server",
             endpoint="https://test.endpoint",
             private_key="test_key"

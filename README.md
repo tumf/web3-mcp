@@ -4,7 +4,7 @@ An MCP server implementation wrapping Ankr Advanced API.
 
 ## Overview
 
-FactMCP is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that provides access to Ankr's Advanced API for blockchain data. It allows LLMs to interact with blockchain data across multiple chains including Ethereum, BSC, Polygon, Avalanche, and more.
+FastMCP is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that provides access to Ankr's Advanced API for blockchain data. It allows LLMs to interact with blockchain data across multiple chains including Ethereum, BSC, Polygon, Avalanche, and more.
 
 ## Features
 
@@ -42,11 +42,11 @@ export ANKR_PRIVATE_KEY="your_private_key"
 ### Running the server
 
 ```python
-from web3_mcp.server import FactMCP
+from web3_mcp.server import FastMCP
 
 # Create server
-server = FactMCP(
-    name="Ankr FactMCP",
+server = FastMCP(
+    name="Ankr FastMCP",
     endpoint="your_ankr_endpoint",  # Optional, defaults to ANKR_ENDPOINT env var
     private_key="your_private_key"  # Optional, defaults to ANKR_PRIVATE_KEY env var
 )

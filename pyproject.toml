@@ -1,7 +1,7 @@
 [project]
 name = "web3-mcp"
 version = "0.1.0"
-description = "FactMCP server wrapping Ankr Advanced API"
+description = "FastMCP server wrapping Ankr Advanced API"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

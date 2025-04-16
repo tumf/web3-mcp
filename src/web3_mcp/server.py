@@ -36,17 +36,17 @@ from .api.token import (
 )
 from .constants import SUPPORTED_NETWORKS
 
-class FactMCP:
-    """FactMCP server implementation wrapping Ankr Advanced API"""
+class FastMCP:
+    """FastMCP server implementation wrapping Ankr Advanced API"""
     
     def __init__(
         self,
-        name: str = "FactMCP",
+        name: str = "FastMCP",
         endpoint: Optional[str] = None,
         private_key: Optional[str] = None,
     ):
         """
-        Initialize FactMCP server
+        Initialize FastMCP server
         
         Args:
             name: Server name
@@ -316,7 +316,7 @@ class FactMCP:
             }
     
     def run(self, **kwargs: Any) -> None:
-        """Run the FactMCP server"""
+        """Run the FastMCP server"""
         self.mcp.run(**kwargs)
     
     def __call__(self) -> FastMCP:

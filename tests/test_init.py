@@ -5,7 +5,7 @@ Test server initialization
 import unittest
 from unittest.mock import patch
 
-from web3_mcp.server import FactMCP
+from web3_mcp.server import FastMCP
 
 class TestServerInit(unittest.TestCase):
     """Test server initialization"""
@@ -13,7 +13,7 @@ class TestServerInit(unittest.TestCase):
     @patch("web3_mcp.auth.AnkrWeb3")
     def test_server_init(self, mock_ankr_web3):
         """Test server initialization with mock endpoint"""
-        server = FactMCP(
+        server = FastMCP(
             name="Test Server",
             endpoint="https://test.endpoint",
             private_key="test_key"

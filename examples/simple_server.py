@@ -1,9 +1,9 @@
 """
-Simple example of running the FactMCP server
+Simple example of running the FastMCP server
 """
 
 import os
-from web3_mcp.server import FactMCP
+from web3_mcp.server import FastMCP
 
 endpoint = os.environ.get("ANKR_ENDPOINT")
 private_key = os.environ.get("ANKR_PRIVATE_KEY", 
@@ -12,8 +12,8 @@ private_key = os.environ.get("ANKR_PRIVATE_KEY",
 if not endpoint:
     raise ValueError("ANKR_ENDPOINT environment variable is not set")
 
-server = FactMCP(
-    name="Ankr FactMCP Example",
+server = FastMCP(
+    name="Ankr FastMCP Example",
     endpoint=endpoint,
     private_key=private_key,
 )
