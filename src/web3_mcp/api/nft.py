@@ -74,24 +74,24 @@ class NFTApi:
         """Get NFTs owned by a wallet address"""
         from ankr.types import GetNFTsByOwnerRequest
         
-        wallet_address = request.wallet_address
-        blockchain = request.blockchain if request.blockchain else None
-        page_token = request.page_token if request.page_token else None
-        
-        ankr_request = GetNFTsByOwnerRequest(
-            walletAddress=wallet_address,
-            blockchain=blockchain
-        )
-        
-        if request.page_size is not None:
-            ankr_request.pageSize = request.page_size
+        try:
+            ankr_request = GetNFTsByOwnerRequest(
+                walletAddress=request.wallet_address,
+                blockchain=request.blockchain if request.blockchain else None
+            )
             
-        if page_token:
-            ankr_request.pageToken = page_token
-        
-        result = self.client.nft.get_nfts(ankr_request)
-        assets = list(result) if result else []
-        return {"assets": assets, "next_page_token": ""}
+            if request.page_size is not None:
+                ankr_request.pageSize = request.page_size
+                
+            if request.page_token:
+                ankr_request.pageToken = request.page_token
+            
+            result = self.client.nft.get_nfts(ankr_request)
+            assets = list(result) if result else []
+            return {"assets": assets, "next_page_token": ""}
+        except Exception as e:
+            print(f"Error in get_nfts_by_owner: {e}")
+            return {"assets": [], "next_page_token": ""}
 
     async def get_nft_metadata(self, request: NFTMetadataRequest) -> Dict[str, Any]:
         """Get metadata for a specific NFT"""
