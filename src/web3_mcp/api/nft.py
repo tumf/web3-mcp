@@ -7,13 +7,6 @@ from typing import Any, Dict, List, Optional
 from ankr import AnkrWeb3
 from pydantic import BaseModel, Field
 
-from ..constants import (
-    NFT_GET_BY_OWNER,
-    NFT_GET_HOLDERS,
-    NFT_GET_METADATA,
-    NFT_GET_TRANSFERS,
-)
-
 
 class NFTCollection(BaseModel):
     blockchain: str
@@ -72,20 +65,88 @@ class NFTApi:
 
     async def get_nfts_by_owner(self, request: NFTByOwnerRequest) -> Dict[str, Any]:
         """Get NFTs owned by a wallet address"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(NFT_GET_BY_OWNER, params)
+        from ankr.types import GetNFTsByOwnerRequest
+
+        try:
+            ankr_request = GetNFTsByOwnerRequest(
+                walletAddress=request.wallet_address,
+                blockchain=request.blockchain if request.blockchain else None,
+            )
+
+            if request.page_size is not None:
+                ankr_request.pageSize = request.page_size
+
+            if request.page_token:
+                ankr_request.pageToken = request.page_token
+
+            result = self.client.nft.get_nfts(ankr_request)
+            assets = list(result) if result else []
+            return {"assets": assets, "next_page_token": ""}
+        except Exception as e:
+            print(f"Error in get_nfts_by_owner: {e}")
+            return {"assets": [], "next_page_token": ""}
 
     async def get_nft_metadata(self, request: NFTMetadataRequest) -> Dict[str, Any]:
         """Get metadata for a specific NFT"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(NFT_GET_METADATA, params)
+        from ankr.types import GetNFTMetadataRequest
+
+        ankr_request = GetNFTMetadataRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address,
+            tokenId=request.token_id,
+            forceFetch=True,
+        )
+
+        result = self.client.nft.get_nft_metadata(ankr_request)
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        return {
+            "name": getattr(result, "name", ""),
+            "description": getattr(result, "description", ""),
+            "image": getattr(result, "image", ""),
+            "attributes": getattr(result, "attributes", []),
+        }
 
     async def get_nft_holders(self, request: NFTHoldersRequest) -> Dict[str, Any]:
         """Get holders of a specific NFT collection"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(NFT_GET_HOLDERS, params)
+        from ankr.types import GetNFTHoldersRequest
+
+        ankr_request = GetNFTHoldersRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address,
+            pageToken=request.page_token,
+            pageSize=request.page_size,
+        )
+
+        result = self.client.nft.get_nft_holders(ankr_request)
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+
+        if hasattr(result, "__iter__"):
+            holders = list(result) if result else []
+            return {"holders": holders, "next_page_token": ""}
+        return {"holders": [], "next_page_token": ""}
 
     async def get_nft_transfers(self, request: NFTTransfersRequest) -> Dict[str, Any]:
         """Get transfer history for NFTs"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(NFT_GET_TRANSFERS, params)
+        from ankr.types import GetNFTTransfersRequest
+
+        ankr_request = GetNFTTransfersRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address,
+            tokenId=request.token_id,
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            pageToken=request.page_token,
+            pageSize=request.page_size,
+        )
+
+        result = self.client.nft.get_nft_transfers(ankr_request)
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+
+        if hasattr(result, "__iter__"):
+            transfers = list(result) if result else []
+            return {"transfers": transfers, "next_page_token": ""}
+        return {"transfers": [], "next_page_token": ""}

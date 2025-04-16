@@ -2,61 +2,82 @@
 Test fixtures for e2e tests
 """
 
-import asyncio
 import os
-import threading
-from typing import Generator, AsyncGenerator
-import time
+from typing import Any, AsyncGenerator, Dict, Tuple
 
 import pytest
-from fastmcp import Client
+import pytest_asyncio
 
-# from web3_mcp.server import init_server
+from web3_mcp.auth import AnkrAuth
 
 
-def start_server_thread(mcp) -> threading.Thread:
-    """Start the MCP server in a separate thread"""
-    thread = threading.Thread(target=mcp.run)
-    thread.daemon = True
-    thread.start()
-    time.sleep(1)  # Give the server time to start
-    return thread
+class DirectClient:
+    """Client for making requests directly to the Ankr API"""
+
+    def __init__(self, client: Any) -> None:
+        self.client = client
+
+    async def call_tool(self, tool_name: str, params: Dict[str, Any]) -> Any:
+        """Call a tool method directly on the Ankr API client"""
+        request = params or {}
+
+        if tool_name == "get_nfts_by_owner":
+            from web3_mcp.api.nft import NFTApi, NFTByOwnerRequest
+
+            return await NFTApi(self.client).get_nfts_by_owner(NFTByOwnerRequest(**request))
+
+        elif tool_name == "get_nft_metadata":
+            from web3_mcp.api.nft import NFTApi, NFTMetadataRequest
+
+            return await NFTApi(self.client).get_nft_metadata(NFTMetadataRequest(**request))
+
+        elif tool_name == "get_blockchain_stats":
+            from web3_mcp.api.query import BlockchainStatsRequest, QueryApi
+
+            return await QueryApi(self.client).get_blockchain_stats(
+                BlockchainStatsRequest(**request)
+            )
+
+        elif tool_name == "get_blocks":
+            from web3_mcp.api.query import BlocksRequest, QueryApi
+
+            return await QueryApi(self.client).get_blocks(BlocksRequest(**request))
+
+        elif tool_name == "get_account_balance":
+            from web3_mcp.api.token import AccountBalanceRequest, TokenApi
+
+            return await TokenApi(self.client).get_account_balance(AccountBalanceRequest(**request))
+
+        elif tool_name == "get_token_price":
+            from web3_mcp.api.token import TokenApi, TokenPriceRequest
+
+            return await TokenApi(self.client).get_token_price(TokenPriceRequest(**request))
+
+        else:
+            raise ValueError(f"Unknown tool: {tool_name}")
 
 
 @pytest.fixture(scope="session")
-def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
-    """Create an event loop for the test session"""
-    policy = asyncio.get_event_loop_policy()
-    loop = policy.new_event_loop()
-    yield loop
-    loop.close()
+def ankr_credentials() -> Tuple[str, str]:
+    """Get Ankr API credentials from environment variables"""
+    endpoint = os.environ.get("ANKR_ENDPOINT")
+    private_key = os.environ.get("ANKR_PRIVATE_KEY", os.environ.get("DOTENV_PRIVATE_KEY_DEVIN"))
+
+    if not endpoint or not private_key:
+        pytest.skip("ANKR_ENDPOINT and ANKR_PRIVATE_KEY environment variables are required")
+
+    return endpoint, private_key
 
 
-@pytest.fixture(scope="session")
-def mcp_server() -> Generator[None, None, None]:
-    """Initialize and run the MCP server for testing"""
-    
-    # endpoint = os.environ.get("ANKR_ENDPOINT")
-    # private_key = os.environ.get("ANKR_PRIVATE_KEY", os.environ.get("DOTENV_PRIVATE_KEY_DEVIN"))
-    
-    # if not endpoint or not private_key:
-    #     pytest.skip("ANKR_ENDPOINT and ANKR_PRIVATE_KEY environment variables are required")
-    
-    # mcp = init_server(
-    #     name="Ankr MCP Test",
-    #     endpoint=endpoint,
-    #     private_key=private_key,
-    # )
-    
-    # server_thread = start_server_thread(mcp)
-    
-    yield
-    
+@pytest_asyncio.fixture(scope="session")
+async def mcp_client(ankr_credentials: Tuple[str, str]) -> AsyncGenerator[DirectClient, None]:
+    """Initialize a client for making requests directly to the Ankr API"""
+    endpoint, private_key = ankr_credentials
 
+    # Create auth object with credentials
+    auth = AnkrAuth(endpoint=endpoint, private_key=private_key)
+    ankr_client = auth.client
 
-@pytest.fixture
-async def mcp_client() -> AsyncGenerator[Client, None]:
-    """Initialize an MCP client for making requests to the server"""
-    from e2e_tests.test_mock import MockClient
-    client = MockClient()
+    # Create a client that directly uses the API methods
+    client = DirectClient(ankr_client)
     yield client
