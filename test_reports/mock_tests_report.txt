@@ -1,0 +1,28 @@
+============================= test session starts ==============================
+platform linux -- Python 3.10.12, pytest-8.3.5, pluggy-1.5.0 -- /usr/bin/python3
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/repos/web3-mcp
+configfile: pyproject.toml
+plugins: asyncio-0.26.0, anyio-4.9.0
+asyncio: mode=strict, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 3 items
+
+e2e_tests/test_mock.py::test_mocked_nft_api PASSED                       [ 33%]
+e2e_tests/test_mock.py::test_mocked_query_api PASSED                     [ 66%]
+e2e_tests/test_mock.py::test_mocked_token_api PASSED                     [100%]
+
+=============================== warnings summary ===============================
+e2e_tests/test_mock.py::test_mocked_nft_api
+  /home/ubuntu/.local/lib/python3.10/site-packages/pytest_asyncio/plugin.py:884: DeprecationWarning: The event_loop fixture provided by pytest-asyncio has been redefined in
+  /home/ubuntu/repos/web3-mcp/e2e_tests/conftest.py:26
+  Replacing the event_loop fixture with a custom implementation is deprecated
+  and will lead to errors in the future.
+  If you want to request an asyncio event loop with a scope other than function
+  scope, use the "loop_scope" argument to the asyncio mark when marking the tests.
+  If you want to return different types of event loops, use the event_loop_policy
+  fixture.
+  
+    warnings.warn(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+========================= 3 passed, 1 warning in 0.01s =========================
