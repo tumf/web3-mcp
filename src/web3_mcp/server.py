@@ -25,11 +25,15 @@ from .api.query import (
 from .api.token import (
     AccountBalanceRequest,
     CurrenciesRequest,
+    CurrenciesResponse,
     TokenApi,
     TokenHoldersCountRequest,
+    TokenHoldersCountResponse,
     TokenHoldersRequest,
+    TokenHoldersResponse,
     TokenPriceRequest,
     TokenTransfersRequest,
+    TokenTransfersResponse,
 )
 from .auth import AnkrAuth
 from .constants import SUPPORTED_NETWORKS
@@ -198,7 +202,7 @@ def init_server(
     @mcp.tool()
     async def get_account_balance(request: AccountBalanceRequest) -> Dict[str, Any]:
         """
-        Get token balances for a wallet
+        Get token balances for a wallet address
 
         Args:
             request: Account balance request parameters
@@ -209,7 +213,7 @@ def init_server(
         return await token_api.get_account_balance(request)
 
     @mcp.tool()
-    async def get_currencies(request: CurrenciesRequest) -> Dict[str, Any]:
+    async def get_currencies(request: CurrenciesRequest) -> CurrenciesResponse:
         """
         Get available currencies
 
@@ -235,7 +239,7 @@ def init_server(
         return await token_api.get_token_price(request)
 
     @mcp.tool()
-    async def get_token_holders(request: TokenHoldersRequest) -> Dict[str, Any]:
+    async def get_token_holders(request: TokenHoldersRequest) -> TokenHoldersResponse:
         """
         Get token holders
 
@@ -248,7 +252,9 @@ def init_server(
         return await token_api.get_token_holders(request)
 
     @mcp.tool()
-    async def get_token_holders_count(request: TokenHoldersCountRequest) -> Dict[str, Any]:
+    async def get_token_holders_count(
+        request: TokenHoldersCountRequest,
+    ) -> TokenHoldersCountResponse:
         """
         Get token holders count
 
@@ -261,7 +267,7 @@ def init_server(
         return await token_api.get_token_holders_count(request)
 
     @mcp.tool()
-    async def get_token_transfers(request: TokenTransfersRequest) -> Dict[str, Any]:
+    async def get_token_transfers(request: TokenTransfersRequest) -> TokenTransfersResponse:
         """
         Get token transfer history
 
