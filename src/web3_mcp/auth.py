@@ -33,5 +33,5 @@ class AnkrAuth:
     def client(self) -> AnkrWeb3:
         """Return authenticated Ankr client"""
         if not self._client:
-            self._client = AnkrWeb3(provider_url=self.endpoint, private_key=self.private_key)
+            self._client = AnkrWeb3(api_key=self.private_key)
         return self._client

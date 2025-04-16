@@ -126,7 +126,7 @@ bump-beta:
 
 # E2E Testing
 e2e-test:
-	pytest e2e_tests -v
+	./e2e_tests/run_tests.sh
 
 e2e-test-mock:
-	pytest e2e_tests/test_mock.py -v
+	./e2e_tests/run_mock_tests.sh

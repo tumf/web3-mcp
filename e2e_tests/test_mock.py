@@ -3,7 +3,9 @@ Mocked tests for CI environments (no real Ankr API access needed)
 """
 
 import asyncio
+from typing import AsyncGenerator
 import pytest
+import pytest_asyncio
 from unittest.mock import patch, MagicMock, AsyncMock
 
 from fastmcp import Client
@@ -64,3 +66,9 @@ async def test_mocked_token_api():
     result = await client.invoke("get_account_balance", {"wallet_address": "0x123"})
     assert "assets" in result
     assert len(result["assets"]) > 0
+
+@pytest_asyncio.fixture
+async def mcp_client():
+    """Override the default mcp_client fixture with a mock client"""
+    client = MockClient()
+    return client
