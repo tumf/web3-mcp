@@ -4,7 +4,6 @@ E2E tests for Query API
 
 import asyncio
 import pytest
-from fastmcp import Client
 
 from web3_mcp.api.query import BlockchainStatsRequest, BlocksRequest
 from web3_mcp.constants import SUPPORTED_NETWORKS
@@ -24,21 +23,8 @@ async def test_get_blockchain_stats(mcp_client):
                 timeout=10.0  # 10 second timeout
             )
             
-            if hasattr(result, "__getitem__") and hasattr(result[0], "text"):
-                result_text = result[0].text
-                if result_text.startswith("{") and result_text.endswith("}"):
-                    import json
-                    try:
-                        result_dict = json.loads(result_text)
-                    except json.JSONDecodeError:
-                        result_dict = {"last_block_number": 0, "transactions": 0}
-                else:
-                    result_dict = {"last_block_number": 0, "transactions": 0}
-            else:
-                result_dict = result
-            
-            assert "last_block_number" in result_dict
-            assert "transactions" in result_dict
+            assert "last_block_number" in result
+            assert "transactions" in result
         except asyncio.TimeoutError:
             print(f"Test timed out after 10 seconds for blockchain {blockchain}")
             pytest.skip("API request timed out")
@@ -62,22 +48,9 @@ async def test_get_blocks(mcp_client):
             timeout=10.0  # 10 second timeout
         )
         
-        if hasattr(result, "__getitem__") and hasattr(result[0], "text"):
-            result_text = result[0].text
-            if result_text.startswith("{") and result_text.endswith("}"):
-                import json
-                try:
-                    result_dict = json.loads(result_text)
-                except json.JSONDecodeError:
-                    result_dict = {"blocks": [], "next_page_token": ""}
-            else:
-                result_dict = {"blocks": [], "next_page_token": ""}
-        else:
-            result_dict = result
-        
-        assert "blocks" in result_dict
-        assert len(result_dict["blocks"]) <= 2  # Should respect page_size
-        assert "next_page_token" in result_dict
+        assert "blocks" in result
+        assert len(result["blocks"]) <= 2  # Should respect page_size
+        assert "next_page_token" in result
     except asyncio.TimeoutError:
         print("Test timed out after 10 seconds")
         pytest.skip("API request timed out")

@@ -4,7 +4,6 @@ E2E tests for NFT API
 
 import asyncio
 import pytest
-from fastmcp import Client
 
 from web3_mcp.api.nft import NFTByOwnerRequest, NFTMetadataRequest
 from web3_mcp.constants import SUPPORTED_NETWORKS
@@ -27,21 +26,8 @@ async def test_get_nfts_by_owner(mcp_client):
             timeout=10.0  # 10 second timeout
         )
         
-        if hasattr(result, "__getitem__") and hasattr(result[0], "text"):
-            result_text = result[0].text
-            if result_text.startswith("{") and result_text.endswith("}"):
-                import json
-                try:
-                    result_dict = json.loads(result_text)
-                except json.JSONDecodeError:
-                    result_dict = {"assets": [], "next_page_token": ""}
-            else:
-                result_dict = {"assets": [], "next_page_token": ""}
-        else:
-            result_dict = result
-        
-        assert "assets" in result_dict
-        assert "next_page_token" in result_dict
+        assert "assets" in result
+        assert "next_page_token" in result
     except asyncio.TimeoutError:
         print("Test timed out after 10 seconds")
         pytest.skip("API request timed out")
@@ -65,21 +51,8 @@ async def test_get_nft_metadata(mcp_client):
             timeout=10.0  # 10 second timeout
         )
         
-        if hasattr(result, "__getitem__") and hasattr(result[0], "text"):
-            result_text = result[0].text
-            if result_text.startswith("{") and result_text.endswith("}"):
-                import json
-                try:
-                    result_dict = json.loads(result_text)
-                except json.JSONDecodeError:
-                    result_dict = {"name": "", "image": ""}
-            else:
-                result_dict = {"name": "", "image": ""}
-        else:
-            result_dict = result
-        
-        assert "name" in result_dict
-        assert "image" in result_dict or "image_url" in result_dict
+        assert "name" in result
+        assert "image" in result or "image_url" in result
     except asyncio.TimeoutError:
         print("Test timed out after 10 seconds")
         pytest.skip("API request timed out")
