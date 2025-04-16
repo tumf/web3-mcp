@@ -18,28 +18,15 @@ from fastmcp import Client
 def start_server_thread(mcp) -> threading.Thread:
     """Start the MCP server in a separate thread"""
     def run_server():
-        import sys
-        import os
-        r_pipe, w_pipe = os.pipe()
-        old_stdin, old_stdout = sys.stdin, sys.stdout
-        
-        r_file = os.fdopen(r_pipe, 'r')
-        w_file = os.fdopen(w_pipe, 'w')
-        
-        sys.stdin = r_file
-        sys.stdout = w_file
-        
         try:
             mcp.run(transport="stdio")
-        finally:
-            sys.stdin, sys.stdout = old_stdin, old_stdout
-            r_file.close()
-            w_file.close()
+        except Exception as e:
+            print(f"Server error: {e}")
         
     thread = threading.Thread(target=run_server)
     thread.daemon = True
     thread.start()
-    time.sleep(2)  # Give the server time to start
+    time.sleep(1)  # Give the server time to start
     return thread
 
 

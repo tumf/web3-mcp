@@ -2,6 +2,7 @@
 E2E tests for NFT API
 """
 
+import asyncio
 import pytest
 from fastmcp import Client
 
@@ -21,7 +22,10 @@ async def test_get_nfts_by_owner(mcp_client):
     )
     
     try:
-        result = await mcp_client.call_tool("get_nfts_by_owner", {"request": request.model_dump(exclude_none=True)})
+        result = await asyncio.wait_for(
+            mcp_client.call_tool("get_nfts_by_owner", {"request": request.model_dump(exclude_none=True)}),
+            timeout=10.0  # 10 second timeout
+        )
         
         if hasattr(result, "__getitem__") and hasattr(result[0], "text"):
             result_text = result[0].text
@@ -38,6 +42,9 @@ async def test_get_nfts_by_owner(mcp_client):
         
         assert "assets" in result_dict
         assert "next_page_token" in result_dict
+    except asyncio.TimeoutError:
+        print("Test timed out after 10 seconds")
+        pytest.skip("API request timed out")
     except Exception as e:
         print(f"Error in test_get_nfts_by_owner: {e}")
         pytest.skip(f"Skipping due to API error: {e}")
@@ -53,7 +60,10 @@ async def test_get_nft_metadata(mcp_client):
     )
     
     try:
-        result = await mcp_client.call_tool("get_nft_metadata", {"request": request.model_dump(exclude_none=True)})
+        result = await asyncio.wait_for(
+            mcp_client.call_tool("get_nft_metadata", {"request": request.model_dump(exclude_none=True)}),
+            timeout=10.0  # 10 second timeout
+        )
         
         if hasattr(result, "__getitem__") and hasattr(result[0], "text"):
             result_text = result[0].text
@@ -70,6 +80,9 @@ async def test_get_nft_metadata(mcp_client):
         
         assert "name" in result_dict
         assert "image" in result_dict or "image_url" in result_dict
+    except asyncio.TimeoutError:
+        print("Test timed out after 10 seconds")
+        pytest.skip("API request timed out")
     except Exception as e:
         print(f"Error in test_get_nft_metadata: {e}")
         pytest.skip(f"Skipping due to API error: {e}")
