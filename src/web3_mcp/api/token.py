@@ -67,29 +67,29 @@ class TokenApi:
     async def get_account_balance(self, request: AccountBalanceRequest) -> Dict[str, Any]:
         """Get token balances for a wallet"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(TOKEN_GET_ACCOUNT_BALANCE, params)
+        return await self.client.get_account_balance(**params)
 
     async def get_currencies(self, request: CurrenciesRequest) -> Dict[str, Any]:
         """Get available currencies"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(TOKEN_GET_CURRENCIES, params)
+        return await self.client.get_currencies(**params)
 
     async def get_token_price(self, request: TokenPriceRequest) -> Dict[str, Any]:
         """Get token price information"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(TOKEN_GET_TOKEN_PRICE, params)
+        return await self.client.get_token_price(**params)
 
     async def get_token_holders(self, request: TokenHoldersRequest) -> Dict[str, Any]:
         """Get token holders"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(TOKEN_GET_TOKEN_HOLDERS, params)
+        return await self.client.get_token_holders(**params)
 
     async def get_token_holders_count(self, request: TokenHoldersCountRequest) -> Dict[str, Any]:
         """Get token holders count"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(TOKEN_GET_TOKEN_HOLDERS_COUNT, params)
+        return await self.client.get_token_holders_count(**params)
 
     async def get_token_transfers(self, request: TokenTransfersRequest) -> Dict[str, Any]:
         """Get token transfer history"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(TOKEN_GET_TOKEN_TRANSFERS, params)
+        return await self.client.get_token_transfers(**params)

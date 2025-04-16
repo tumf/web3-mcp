@@ -76,31 +76,31 @@ class QueryApi:
     async def get_blockchain_stats(self, request: BlockchainStatsRequest) -> Dict[str, Any]:
         """Get blockchain statistics"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(QUERY_GET_BLOCKCHAIN_STATS, params)
+        return await self.client.get_blockchain_stats(**params)
 
     async def get_blocks(self, request: BlocksRequest) -> Dict[str, Any]:
         """Get blocks information"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(QUERY_GET_BLOCKS, params)
+        return await self.client.get_blocks(**params)
 
     async def get_logs(self, request: LogsRequest) -> Dict[str, Any]:
         """Get blockchain logs"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(QUERY_GET_LOGS, params)
+        return await self.client.get_logs(**params)
 
     async def get_transactions_by_hash(self, request: TransactionsByHashRequest) -> Dict[str, Any]:
         """Get transactions by hash"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(QUERY_GET_TRANSACTIONS_BY_HASH, params)
+        return await self.client.get_transaction_by_hash(**params)
 
     async def get_transactions_by_address(
         self, request: TransactionsByAddressRequest
     ) -> Dict[str, Any]:
         """Get transactions by address"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(QUERY_GET_TRANSACTIONS_BY_ADDRESS, params)
+        return await self.client.get_transactions_by_address(**params)
 
     async def get_interactions(self, request: InteractionsRequest) -> Dict[str, Any]:
         """Get wallet interactions with contracts"""
         params = request.model_dump(exclude_none=True)
-        return await self.client.full_request(QUERY_GET_INTERACTIONS, params)
+        return await self.client.get_interactions(**params)
