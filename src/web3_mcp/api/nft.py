@@ -81,7 +81,7 @@ class NFTApi:
             pageSize=request.page_size
         )
         
-        result = self.client.nft.get_nfts_by_owner(ankr_request)
+        result = self.client.nft.get_nfts_by_owner_generator(ankr_request)
         assets = list(result) if result else []
         return {"assets": assets, "next_page_token": ""}
 
@@ -97,7 +97,14 @@ class NFTApi:
         )
         
         result = self.client.nft.get_nft_metadata(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        return {
+            "name": getattr(result, "name", ""),
+            "description": getattr(result, "description", ""),
+            "image": getattr(result, "image", ""),
+            "attributes": getattr(result, "attributes", [])
+        }
 
     async def get_nft_holders(self, request: NFTHoldersRequest) -> Dict[str, Any]:
         """Get holders of a specific NFT collection"""
@@ -111,7 +118,12 @@ class NFTApi:
         )
         
         result = self.client.nft.get_nft_holders(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        
+        if hasattr(result, "__iter__"):
+            holders = list(result) if result else []
+            return {"holders": holders}
 
     async def get_nft_transfers(self, request: NFTTransfersRequest) -> Dict[str, Any]:
         """Get transfer history for NFTs"""
@@ -129,4 +141,9 @@ class NFTApi:
         )
         
         result = self.client.nft.get_nft_transfers(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        
+        if hasattr(result, "__iter__"):
+            transfers = list(result) if result else []
+            return {"transfers": transfers}

@@ -82,7 +82,13 @@ class QueryApi:
         )
         
         result = self.client.query.get_blockchain_stats(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        return {
+            "last_block_number": getattr(result, "lastBlockNumber", 0),
+            "transactions": getattr(result, "transactions", 0),
+            "tps": getattr(result, "tps", 0)
+        }
 
     async def get_blocks(self, request: BlocksRequest) -> Dict[str, Any]:
         """Get blocks information"""
@@ -98,7 +104,11 @@ class QueryApi:
         )
         
         result = self.client.query.get_blocks(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        if hasattr(result, "__iter__"):
+            blocks = list(result) if result else []
+            return {"blocks": blocks, "next_page_token": ""}
 
     async def get_logs(self, request: LogsRequest) -> Dict[str, Any]:
         """Get blockchain logs"""
@@ -116,7 +126,11 @@ class QueryApi:
         )
         
         result = self.client.query.get_logs(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        if hasattr(result, "__iter__"):
+            logs = list(result) if result else []
+            return {"logs": logs, "next_page_token": ""}
 
     async def get_transactions_by_hash(self, request: TransactionsByHashRequest) -> Dict[str, Any]:
         """Get transactions by hash"""
@@ -128,7 +142,14 @@ class QueryApi:
         )
         
         result = self.client.query.get_transaction_by_hash(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        return {
+            "hash": getattr(result, "hash", ""),
+            "from": getattr(result, "from", ""),
+            "to": getattr(result, "to", ""),
+            "value": getattr(result, "value", "")
+        }
 
     async def get_transactions_by_address(
         self, request: TransactionsByAddressRequest
@@ -147,7 +168,11 @@ class QueryApi:
         )
         
         result = self.client.query.get_transactions_by_address(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        if hasattr(result, "__iter__"):
+            transactions = list(result) if result else []
+            return {"transactions": transactions, "next_page_token": ""}
 
     async def get_interactions(self, request: InteractionsRequest) -> Dict[str, Any]:
         """Get wallet interactions with contracts"""
@@ -165,4 +190,8 @@ class QueryApi:
         )
         
         result = self.client.query.get_interactions(ankr_request)
-        return result
+        if hasattr(result, "__dict__"):
+            return result.__dict__
+        if hasattr(result, "__iter__"):
+            interactions = list(result) if result else []
+            return {"interactions": interactions, "next_page_token": ""}
