@@ -17,7 +17,7 @@ async def test_get_blockchain_stats(mcp_client):
             blockchain=blockchain
         )
         
-        result = await mcp_client.call_tool("get_blockchain_stats", request.model_dump(exclude_none=True))
+        result = await mcp_client.call_tool("get_blockchain_stats", {"request": request.model_dump(exclude_none=True)})
         
         assert "last_block_number" in result
         assert "transactions" in result
@@ -32,7 +32,7 @@ async def test_get_blocks(mcp_client):
         descending_order=True
     )
     
-    result = await mcp_client.call_tool("get_blocks", request.model_dump(exclude_none=True))
+    result = await mcp_client.call_tool("get_blocks", {"request": request.model_dump(exclude_none=True)})
     
     assert "blocks" in result
     assert len(result["blocks"]) <= 2  # Should respect page_size
