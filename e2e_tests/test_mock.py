@@ -38,6 +38,29 @@ class MockClient:
                     }
                 ]
             }
+        elif tool_name == "get_nft_metadata":
+            return {
+                "name": "CryptoPunk #7804",
+                "description": "CryptoPunks launched as a fixed set of 10,000 items in mid-2017 and became one of the inspirations for the ERC-721 standard.",
+                "image": "https://example.com/image.png",
+                "attributes": [
+                    {"trait_type": "Type", "value": "Alien"},
+                    {"trait_type": "Accessory", "value": "Cap Forward"}
+                ]
+            }
+        elif tool_name == "get_blocks":
+            return {
+                "blocks": [
+                    {"number": 12345678, "hash": "0x1234..."},
+                    {"number": 12345677, "hash": "0x5678..."}
+                ],
+                "next_page_token": "token123"
+            }
+        elif tool_name == "get_token_price":
+            return {
+                "price_usd": "1.00",
+                "last_updated_at": "2023-01-01T00:00:00Z"
+            }
         return {}
 
 
