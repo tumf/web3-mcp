@@ -70,10 +70,7 @@ class TokenApi:
         
         ankr_request = GetAccountBalanceRequest(
             walletAddress=request.wallet_address,
-            blockchain=request.blockchain,
-            erc20Only=request.erc20_only,
-            nativeOnly=request.native_only,
-            tokensOnly=request.tokens_only
+            blockchain=request.blockchain
         )
         
         return await self.client.token.get_account_balance(ankr_request)

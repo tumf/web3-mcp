@@ -92,7 +92,7 @@ class QueryApi:
             blockchain=request.blockchain,
             fromBlock=request.from_block,
             toBlock=request.to_block,
-            descendingOrder=request.descending_order,
+            descOrder=request.descending_order,
             pageToken=request.page_token,
             pageSize=request.page_size
         )
@@ -109,7 +109,7 @@ class QueryApi:
             toBlock=request.to_block,
             address=request.address,
             topics=request.topics,
-            descendingOrder=request.descending_order,
+            descOrder=request.descending_order,
             pageToken=request.page_token,
             pageSize=request.page_size
         )
@@ -138,7 +138,7 @@ class QueryApi:
             walletAddress=request.wallet_address,
             fromBlock=request.from_block,
             toBlock=request.to_block,
-            descendingOrder=request.descending_order,
+            descOrder=request.descending_order,
             pageToken=request.page_token,
             pageSize=request.page_size
         )
@@ -155,7 +155,7 @@ class QueryApi:
             fromBlock=request.from_block,
             toBlock=request.to_block,
             contractAddress=request.contract_address,
-            descendingOrder=request.descending_order,
+            descOrder=request.descending_order,
             pageToken=request.page_token,
             pageSize=request.page_size
         )

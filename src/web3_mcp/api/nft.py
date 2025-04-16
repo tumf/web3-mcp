@@ -81,8 +81,9 @@ class NFTApi:
             pageSize=request.page_size
         )
         
-        result = await self.client.nft.get_nfts(ankr_request)
-        return {"assets": list(result), "next_page_token": ""}
+        result = await self.client.nft.get_nfts_by_owner(ankr_request)
+        assets = list(result) if result else []
+        return {"assets": assets, "next_page_token": ""}
 
     async def get_nft_metadata(self, request: NFTMetadataRequest) -> Dict[str, Any]:
         """Get metadata for a specific NFT"""
@@ -91,7 +92,8 @@ class NFTApi:
         ankr_request = GetNFTMetadataRequest(
             blockchain=request.blockchain,
             contractAddress=request.contract_address,
-            tokenId=request.token_id
+            tokenId=request.token_id,
+            forceFetch=True
         )
         
         return await self.client.nft.get_nft_metadata(ankr_request)
