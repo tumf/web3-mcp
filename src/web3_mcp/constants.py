@@ -21,6 +21,4 @@ TOKEN_GET_TOKEN_HOLDERS = "ankr_getTokenHolders"
 TOKEN_GET_TOKEN_HOLDERS_COUNT = "ankr_getTokenHoldersCount"
 TOKEN_GET_TOKEN_TRANSFERS = "ankr_getTokenTransfers"
 
-SUPPORTED_NETWORKS = [
-    "eth", "bsc", "polygon", "avalanche", "arbitrum", "fantom", "optimism"
-]
+SUPPORTED_NETWORKS = ["eth", "bsc", "polygon", "avalanche", "arbitrum", "fantom", "optimism"]
