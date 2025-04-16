@@ -96,11 +96,11 @@ class QueryApi:
         
         ankr_request = GetBlocksRequest(
             blockchain=request.blockchain,
-            from_block=request.from_block,
-            to_block=request.to_block,
-            desc_order=request.descending_order,
-            page_token=request.page_token,
-            page_size=request.page_size
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            descOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.query.get_blocks(ankr_request)
@@ -116,13 +116,13 @@ class QueryApi:
         
         ankr_request = GetLogsRequest(
             blockchain=request.blockchain,
-            from_block=request.from_block,
-            to_block=request.to_block,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
             address=request.address,
             topics=request.topics,
-            desc_order=request.descending_order,
-            page_token=request.page_token,
-            page_size=request.page_size
+            descOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.query.get_logs(ankr_request)
@@ -159,12 +159,12 @@ class QueryApi:
         
         ankr_request = GetTransactionsByAddressRequest(
             blockchain=request.blockchain,
-            wallet_address=request.wallet_address,
-            from_block=request.from_block,
-            to_block=request.to_block,
-            desc_order=request.descending_order,
-            page_token=request.page_token,
-            page_size=request.page_size
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            descOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.query.get_transactions_by_address(ankr_request)
@@ -180,13 +180,13 @@ class QueryApi:
         
         ankr_request = GetInteractionsRequest(
             blockchain=request.blockchain,
-            wallet_address=request.wallet_address,
-            from_block=request.from_block,
-            to_block=request.to_block,
-            contract_address=request.contract_address,
-            desc_order=request.descending_order,
-            page_token=request.page_token,
-            page_size=request.page_size
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            contractAddress=request.contract_address,
+            descOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.query.get_interactions(ankr_request)

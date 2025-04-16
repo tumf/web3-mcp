@@ -75,10 +75,10 @@ class NFTApi:
         from ankr.types import GetNFTsByOwnerRequest
         
         ankr_request = GetNFTsByOwnerRequest(
-            wallet_address=request.wallet_address,
+            walletAddress=request.wallet_address,
             blockchain=request.blockchain,
-            page_token=request.page_token,
-            page_size=request.page_size
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.nft.get_nfts_by_owner(ankr_request)
@@ -91,9 +91,9 @@ class NFTApi:
         
         ankr_request = GetNFTMetadataRequest(
             blockchain=request.blockchain,
-            contract_address=request.contract_address,
-            token_id=request.token_id,
-            force_fetch=True
+            contractAddress=request.contract_address,
+            tokenId=request.token_id,
+            forceFetch=True
         )
         
         result = self.client.nft.get_nft_metadata(ankr_request)
@@ -112,9 +112,9 @@ class NFTApi:
         
         ankr_request = GetNFTHoldersRequest(
             blockchain=request.blockchain,
-            contract_address=request.contract_address,
-            page_token=request.page_token,
-            page_size=request.page_size
+            contractAddress=request.contract_address,
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.nft.get_nft_holders(ankr_request)
@@ -131,13 +131,13 @@ class NFTApi:
         
         ankr_request = GetNFTTransfersRequest(
             blockchain=request.blockchain,
-            contract_address=request.contract_address,
-            token_id=request.token_id,
-            wallet_address=request.wallet_address,
-            from_block=request.from_block,
-            to_block=request.to_block,
-            page_token=request.page_token,
-            page_size=request.page_size
+            contractAddress=request.contract_address,
+            tokenId=request.token_id,
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            pageToken=request.page_token,
+            pageSize=request.page_size
         )
         
         result = self.client.nft.get_nft_transfers(ankr_request)
