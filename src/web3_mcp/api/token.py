@@ -66,30 +66,77 @@ class TokenApi:
 
     async def get_account_balance(self, request: AccountBalanceRequest) -> Dict[str, Any]:
         """Get token balances for a wallet"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.token.get_account_balance(**params)
+        from ankr.types import GetAccountBalanceRequest
+        
+        ankr_request = GetAccountBalanceRequest(
+            walletAddress=request.wallet_address,
+            blockchain=request.blockchain,
+            erc20Only=request.erc20_only,
+            nativeOnly=request.native_only,
+            tokensOnly=request.tokens_only
+        )
+        
+        return await self.client.token.get_account_balance(ankr_request)
 
     async def get_currencies(self, request: CurrenciesRequest) -> Dict[str, Any]:
         """Get available currencies"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.token.get_currencies(**params)
+        from ankr.types import GetCurrenciesRequest
+        
+        ankr_request = GetCurrenciesRequest(
+            blockchain=request.blockchain,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.token.get_currencies(ankr_request)
 
     async def get_token_price(self, request: TokenPriceRequest) -> Dict[str, Any]:
         """Get token price information"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.token.get_token_price(**params)
+        from ankr.types import GetTokenPriceRequest
+        
+        ankr_request = GetTokenPriceRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address
+        )
+        
+        return await self.client.token.get_token_price(ankr_request)
 
     async def get_token_holders(self, request: TokenHoldersRequest) -> Dict[str, Any]:
         """Get token holders"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.token.get_token_holders(**params)
+        from ankr.types import GetTokenHoldersRequest
+        
+        ankr_request = GetTokenHoldersRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.token.get_token_holders(ankr_request)
 
     async def get_token_holders_count(self, request: TokenHoldersCountRequest) -> Dict[str, Any]:
         """Get token holders count"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.token.get_token_holders_count(**params)
+        from ankr.types import GetTokenHoldersCountRequest
+        
+        ankr_request = GetTokenHoldersCountRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address
+        )
+        
+        return await self.client.token.get_token_holders_count(ankr_request)
 
     async def get_token_transfers(self, request: TokenTransfersRequest) -> Dict[str, Any]:
         """Get token transfer history"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.token.get_token_transfers(**params)
+        from ankr.types import GetTokenTransfersRequest
+        
+        ankr_request = GetTokenTransfersRequest(
+            blockchain=request.blockchain,
+            contractAddress=request.contract_address,
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.token.get_token_transfers(ankr_request)

@@ -75,32 +75,89 @@ class QueryApi:
 
     async def get_blockchain_stats(self, request: BlockchainStatsRequest) -> Dict[str, Any]:
         """Get blockchain statistics"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.query.get_blockchain_stats(**params)
+        from ankr.types import GetBlockchainStatsRequest
+        
+        ankr_request = GetBlockchainStatsRequest(
+            blockchain=request.blockchain
+        )
+        
+        result = await self.client.query.get_blockchain_stats(ankr_request)
+        return result
 
     async def get_blocks(self, request: BlocksRequest) -> Dict[str, Any]:
         """Get blocks information"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.query.get_blocks(**params)
+        from ankr.types import GetBlocksRequest
+        
+        ankr_request = GetBlocksRequest(
+            blockchain=request.blockchain,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            descendingOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.query.get_blocks(ankr_request)
 
     async def get_logs(self, request: LogsRequest) -> Dict[str, Any]:
         """Get blockchain logs"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.query.get_logs(**params)
+        from ankr.types import GetLogsRequest
+        
+        ankr_request = GetLogsRequest(
+            blockchain=request.blockchain,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            address=request.address,
+            topics=request.topics,
+            descendingOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.query.get_logs(ankr_request)
 
     async def get_transactions_by_hash(self, request: TransactionsByHashRequest) -> Dict[str, Any]:
         """Get transactions by hash"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.query.get_transaction_by_hash(**params)
+        from ankr.types import GetTransactionByHashRequest
+        
+        ankr_request = GetTransactionByHashRequest(
+            blockchain=request.blockchain,
+            transactionHash=request.transaction_hash
+        )
+        
+        return await self.client.query.get_transaction_by_hash(ankr_request)
 
     async def get_transactions_by_address(
         self, request: TransactionsByAddressRequest
     ) -> Dict[str, Any]:
         """Get transactions by address"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.query.get_transactions_by_address(**params)
+        from ankr.types import GetTransactionsByAddressRequest
+        
+        ankr_request = GetTransactionsByAddressRequest(
+            blockchain=request.blockchain,
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            descendingOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.query.get_transactions_by_address(ankr_request)
 
     async def get_interactions(self, request: InteractionsRequest) -> Dict[str, Any]:
         """Get wallet interactions with contracts"""
-        params = request.model_dump(exclude_none=True)
-        return await self.client.query.get_interactions(**params)
+        from ankr.types import GetInteractionsRequest
+        
+        ankr_request = GetInteractionsRequest(
+            blockchain=request.blockchain,
+            walletAddress=request.wallet_address,
+            fromBlock=request.from_block,
+            toBlock=request.to_block,
+            contractAddress=request.contract_address,
+            descendingOrder=request.descending_order,
+            pageToken=request.page_token,
+            pageSize=request.page_size
+        )
+        
+        return await self.client.query.get_interactions(ankr_request)
