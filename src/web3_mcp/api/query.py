@@ -107,11 +107,6 @@ class QueryApi:
         if request.descending_order is not None:
             params["descOrder"] = request.descending_order
             
-        if request.page_size is not None:
-            params["pageSize"] = request.page_size
-            
-        if request.page_token:
-            params["pageToken"] = request.page_token
         
         ankr_request = GetBlocksRequest(**params)
         
