@@ -81,7 +81,7 @@ class NFTApi:
             pageSize=request.page_size
         )
         
-        result = self.client.nft.get_nfts_by_owner(ankr_request)
+        result = self.client.nft.get_nfts(ankr_request)
         assets = list(result) if result else []
         return {"assets": assets, "next_page_token": ""}
 
