@@ -105,7 +105,7 @@ class QueryApi:
             params["toBlock"] = request.to_block
             
         if request.descending_order is not None:
-            params["descendingOrder"] = request.descending_order
+            params["descOrder"] = request.descending_order
             
         if request.page_size is not None:
             params["pageSize"] = request.page_size
