@@ -17,10 +17,10 @@ from fastmcp import Client
 
 def start_server_thread(mcp) -> threading.Thread:
     """Start the MCP server in a separate thread"""
-    thread = threading.Thread(target=mcp.run)
+    thread = threading.Thread(target=mcp.run, kwargs={"host": "127.0.0.1", "port": 8000})
     thread.daemon = True
     thread.start()
-    time.sleep(1)  # Give the server time to start
+    time.sleep(2)  # Give the server time to start
     return thread
 
 
@@ -34,8 +34,8 @@ def event_loop() -> Generator[asyncio.AbstractEventLoop, None, None]:
 
 
 @pytest.fixture(scope="session")
-def mcp_server() -> Generator[None, None, None]:
-    """Initialize and run the MCP server for testing"""
+def mcp_server() -> Generator[object, None, None]:
+    """Initialize the MCP server for testing"""
     
     endpoint = os.environ.get("ANKR_ENDPOINT")
     private_key = os.environ.get("ANKR_PRIVATE_KEY", os.environ.get("DOTENV_PRIVATE_KEY_DEVIN"))
@@ -51,35 +51,16 @@ def mcp_server() -> Generator[None, None, None]:
         private_key=private_key,
     )
     
-    server_thread = start_server_thread(mcp)
-    print(f"Server started on http://127.0.0.1:8000")
+    print(f"Server initialized")
     
-    import time
-    time.sleep(10)
+    yield mcp
     
-    import requests
-    try:
-        for _ in range(3):  # Try a few times
-            try:
-                response = requests.get("http://127.0.0.1:8000/health", timeout=2)
-                print(f"Server health check: {response.status_code}")
-                break
-            except Exception as e:
-                print(f"Server health check attempt failed: {e}")
-                time.sleep(2)
-    except Exception as e:
-        print(f"Server health check failed: {e}")
-        pytest.skip(f"Server failed to start: {e}")
-    
-    yield
-    
-    print("Shutting down server...")
+    print("Server fixture cleanup complete")
     
 
 
 @pytest_asyncio.fixture
-async def mcp_client():
+async def mcp_client(mcp_server):
     """Initialize an MCP client for making requests to the server"""
-    from e2e_tests.test_mock import MockClient
-    client = MockClient()
+    client = Client(mcp_server)
     yield client

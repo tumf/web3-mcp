@@ -19,7 +19,7 @@ async def test_get_account_balance(mcp_client):
         blockchain="eth"
     )
     
-    result = await mcp_client.invoke("get_account_balance", request.model_dump(exclude_none=True))
+    result = await mcp_client.call_tool("get_account_balance", request.model_dump(exclude_none=True))
     
     assert "assets" in result
     assert len(result["assets"]) > 0  # This wallet should have assets
@@ -33,6 +33,6 @@ async def test_get_token_price(mcp_client):
         contract_address="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"  # USDC on Ethereum
     )
     
-    result = await mcp_client.invoke("get_token_price", request.model_dump(exclude_none=True))
+    result = await mcp_client.call_tool("get_token_price", request.model_dump(exclude_none=True))
     
     assert "price_usd" in result

@@ -20,7 +20,7 @@ async def test_get_nfts_by_owner(mcp_client):
         page_size=2
     )
     
-    result = await mcp_client.invoke("get_nfts_by_owner", request.model_dump(exclude_none=True))
+    result = await mcp_client.call_tool("get_nfts_by_owner", request.model_dump(exclude_none=True))
     
     assert "assets" in result
     assert "next_page_token" in result
@@ -35,7 +35,7 @@ async def test_get_nft_metadata(mcp_client):
         token_id="7804"
     )
     
-    result = await mcp_client.invoke("get_nft_metadata", request.model_dump(exclude_none=True))
+    result = await mcp_client.call_tool("get_nft_metadata", request.model_dump(exclude_none=True))
     
     assert "name" in result
     assert "image" in result or "image_url" in result
