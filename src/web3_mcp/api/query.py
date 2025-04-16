@@ -81,7 +81,7 @@ class QueryApi:
             blockchain=request.blockchain
         )
         
-        result = await self.client.query.get_blockchain_stats(ankr_request)
+        result = self.client.query.get_blockchain_stats(ankr_request)
         return result
 
     async def get_blocks(self, request: BlocksRequest) -> Dict[str, Any]:
@@ -97,7 +97,8 @@ class QueryApi:
             pageSize=request.page_size
         )
         
-        return await self.client.query.get_blocks(ankr_request)
+        result = self.client.query.get_blocks(ankr_request)
+        return result
 
     async def get_logs(self, request: LogsRequest) -> Dict[str, Any]:
         """Get blockchain logs"""
@@ -114,7 +115,8 @@ class QueryApi:
             pageSize=request.page_size
         )
         
-        return await self.client.query.get_logs(ankr_request)
+        result = self.client.query.get_logs(ankr_request)
+        return result
 
     async def get_transactions_by_hash(self, request: TransactionsByHashRequest) -> Dict[str, Any]:
         """Get transactions by hash"""
@@ -125,7 +127,8 @@ class QueryApi:
             transactionHash=request.transaction_hash
         )
         
-        return await self.client.query.get_transaction_by_hash(ankr_request)
+        result = self.client.query.get_transaction_by_hash(ankr_request)
+        return result
 
     async def get_transactions_by_address(
         self, request: TransactionsByAddressRequest
@@ -143,7 +146,8 @@ class QueryApi:
             pageSize=request.page_size
         )
         
-        return await self.client.query.get_transactions_by_address(ankr_request)
+        result = self.client.query.get_transactions_by_address(ankr_request)
+        return result
 
     async def get_interactions(self, request: InteractionsRequest) -> Dict[str, Any]:
         """Get wallet interactions with contracts"""
@@ -160,4 +164,5 @@ class QueryApi:
             pageSize=request.page_size
         )
         
-        return await self.client.query.get_interactions(ankr_request)
+        result = self.client.query.get_interactions(ankr_request)
+        return result

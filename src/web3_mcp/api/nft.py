@@ -81,7 +81,7 @@ class NFTApi:
             pageSize=request.page_size
         )
         
-        result = await self.client.nft.get_nfts_by_owner(ankr_request)
+        result = self.client.nft.get_nfts_by_owner(ankr_request)
         assets = list(result) if result else []
         return {"assets": assets, "next_page_token": ""}
 
@@ -96,7 +96,8 @@ class NFTApi:
             forceFetch=True
         )
         
-        return await self.client.nft.get_nft_metadata(ankr_request)
+        result = self.client.nft.get_nft_metadata(ankr_request)
+        return result
 
     async def get_nft_holders(self, request: NFTHoldersRequest) -> Dict[str, Any]:
         """Get holders of a specific NFT collection"""
@@ -109,7 +110,8 @@ class NFTApi:
             pageSize=request.page_size
         )
         
-        return await self.client.nft.get_nft_holders(ankr_request)
+        result = self.client.nft.get_nft_holders(ankr_request)
+        return result
 
     async def get_nft_transfers(self, request: NFTTransfersRequest) -> Dict[str, Any]:
         """Get transfer history for NFTs"""
@@ -126,4 +128,5 @@ class NFTApi:
             pageSize=request.page_size
         )
         
-        return await self.client.nft.get_nft_transfers(ankr_request)
+        result = self.client.nft.get_nft_transfers(ankr_request)
+        return result
