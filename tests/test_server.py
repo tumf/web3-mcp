@@ -1,12 +1,12 @@
 """
-Tests for FastMCP server
+Tests for MCP server
 """
 
 import os
 import pytest
 from unittest.mock import patch, MagicMock
 
-from web3_mcp.server import FastMCP
+from web3_mcp.server import init_server
 from web3_mcp.constants import SUPPORTED_NETWORKS
 
 @pytest.fixture
@@ -19,28 +19,25 @@ def mock_ankr_web3():
 
 def test_server_initialization(mock_ankr_web3):
     """Test server initialization"""
-    server = FastMCP(
+    mcp = init_server(
         name="Test Server",
         endpoint="https://test.endpoint",
         private_key="test_key"
     )
     
-    assert server.mcp.name == "Test Server"
+    assert mcp.name == "Test Server"
     
-    assert server.nft_api is not None
-    assert server.query_api is not None
-    assert server.token_api is not None
+    tools = mcp.list_tools()
+    assert len(tools) > 0
 
 def test_utility_tools():
     """Test utility tools"""
     with patch("web3_mcp.auth.AnkrWeb3"):
-        server = FastMCP(
+        mcp = init_server(
             name="Test Server",
             endpoint="https://test.endpoint",
             private_key="test_key"
         )
-        
-        mcp = server()
         
         tools = mcp.list_tools()
         

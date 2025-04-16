@@ -1,13 +1,13 @@
 """
-Entry point for running FastMCP server
+Entry point for running MCP server
 """
 
 import os
 import sys
-from .server import FastMCP
+from .server import init_server
 
 def main() -> None:
-    """Run FastMCP server"""
+    """Run MCP server"""
     endpoint = os.environ.get("ANKR_ENDPOINT")
     private_key = os.environ.get("ANKR_PRIVATE_KEY", 
                                  os.environ.get("DOTENV_PRIVATE_KEY_DEVIN"))
@@ -20,12 +20,12 @@ def main() -> None:
         print("Warning: ANKR_PRIVATE_KEY environment variable is not set", file=sys.stderr)
         print("Some API calls may fail without authentication", file=sys.stderr)
     
-    server = FastMCP(
-        name="Ankr FastMCP",
+    mcp = init_server(
+        name="Ankr MCP",
         endpoint=endpoint,
         private_key=private_key,
     )
-    server.run()
+    mcp.run()
 
 if __name__ == "__main__":
     main()
