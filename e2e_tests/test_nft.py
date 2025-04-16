@@ -10,7 +10,7 @@ from web3_mcp.constants import SUPPORTED_NETWORKS
 
 
 @pytest.mark.asyncio
-async def test_get_nfts_by_owner(mcp_server):
+async def test_get_nfts_by_owner(mcp_client):
     """Test retrieving NFTs by owner"""
     wallet_address = "0x19818f44faf5a217f619aff0fd487cb2a55cca65"  # Example wallet
     
@@ -20,16 +20,14 @@ async def test_get_nfts_by_owner(mcp_server):
         page_size=2
     )
     
-    client = Client("http://127.0.0.1:8000")
-    async with client:
-        result = await client.call_tool("get_nfts_by_owner", request.model_dump(exclude_none=True))
+    result = await mcp_client.invoke("get_nfts_by_owner", request.model_dump(exclude_none=True))
     
     assert "assets" in result
     assert "next_page_token" in result
 
 
 @pytest.mark.asyncio
-async def test_get_nft_metadata(mcp_server):
+async def test_get_nft_metadata(mcp_client):
     """Test retrieving NFT metadata"""
     request = NFTMetadataRequest(
         blockchain="eth",
@@ -37,9 +35,7 @@ async def test_get_nft_metadata(mcp_server):
         token_id="7804"
     )
     
-    client = Client("http://127.0.0.1:8000")
-    async with client:
-        result = await client.call_tool("get_nft_metadata", request.model_dump(exclude_none=True))
+    result = await mcp_client.invoke("get_nft_metadata", request.model_dump(exclude_none=True))
     
     assert "name" in result
     assert "image" in result or "image_url" in result

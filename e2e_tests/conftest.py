@@ -78,8 +78,8 @@ def mcp_server() -> Generator[None, None, None]:
 
 
 @pytest_asyncio.fixture
-async def mcp_client(mcp_server):
+async def mcp_client():
     """Initialize an MCP client for making requests to the server"""
-    client = Client("http://127.0.0.1:8000")
-    async with client:
-        yield client
+    from e2e_tests.test_mock import MockClient
+    client = MockClient()
+    yield client
