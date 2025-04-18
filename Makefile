@@ -80,7 +80,7 @@ publish: build
 	uv run twine upload dist/*
 
 # Version bumping
-VERSION_FILE := web3_mcp/__version__.py
+VERSION_FILE := src/web3_mcp/__version__.py
 
 # Helper function to update version
 define update_version
@@ -103,30 +103,30 @@ PATCH := $(shell echo $(VERSION_BASE) | cut -d. -f3)
 
 # Bump patch version (0.0.x)
 bump-patch:
-	@current_version=$$(grep -o '".*"' $(VERSION_FILE) | sed 's/"//g'); \
+	@current_version=$$(grep -o '__version__ = ".*"' $(VERSION_FILE) | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'); \
 	IFS='.' read -r major minor patch <<< "$$current_version"; \
 	new_patch=$$((patch + 1)); \
 	new_version="$$major.$$minor.$$new_patch"; \
 	echo "Updating version to $$new_version"; \
-	sed -i '' "s/$$current_version/$$new_version/" $(VERSION_FILE)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE)
 
 # Bump minor version (0.x.0)
 bump-minor:
-	@current_version=$$(grep -o '".*"' $(VERSION_FILE) | sed 's/"//g'); \
+	@current_version=$$(grep -o '__version__ = ".*"' $(VERSION_FILE) | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'); \
 	IFS='.' read -r major minor patch <<< "$$current_version"; \
 	new_minor=$$((minor + 1)); \
 	new_version="$$major.$$new_minor.0"; \
 	echo "Updating version to $$new_version"; \
-	sed -i '' "s/$$current_version/$$new_version/" $(VERSION_FILE)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE)
 
 # Bump major version (x.0.0)
 bump-major:
-	@current_version=$$(grep -o '".*"' $(VERSION_FILE) | sed 's/"//g'); \
+	@current_version=$$(grep -o '__version__ = ".*"' $(VERSION_FILE) | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+'); \
 	IFS='.' read -r major minor patch <<< "$$current_version"; \
 	new_major=$$((major + 1)); \
 	new_version="$$new_major.0.0"; \
 	echo "Updating version to $$new_version"; \
-	sed -i '' "s/$$current_version/$$new_version/" $(VERSION_FILE)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE)
 
 # Bump beta version (x.x.x-beta)
 bump-beta:
