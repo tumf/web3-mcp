@@ -3,6 +3,7 @@
 [![Tests](https://github.com/tumf/web3-mcp/actions/workflows/test.yml/badge.svg)](https://github.com/tumf/web3-mcp/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/tumf/web3-mcp/branch/main/graph/badge.svg)](https://codecov.io/gh/tumf/web3-mcp)
 [![PyPI version](https://badge.fury.io/py/web3-mcp.svg)](https://badge.fury.io/py/web3-mcp)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 An MCP server implementation wrapping Ankr Advanced API.
 
