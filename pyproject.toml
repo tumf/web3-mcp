@@ -9,6 +9,9 @@ dependencies = [
     "fastmcp>=2.2.0",
 ]
 
+[project.scripts]
+web3-mcp = "web3_mcp.__main__:main"
+
 [project.optional-dependencies]
 dev = [
     "black>=25.1.0",
