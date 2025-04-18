@@ -1,6 +1,6 @@
 [project]
 name = "web3-mcp"
-version = "0.1.0"
+dynamic = ["version"]
 description = "FastMCP server wrapping Ankr Advanced API"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -51,3 +51,6 @@ asyncio_default_fixture_loop_scope = "session"
 dev = [
     "pytest-asyncio>=0.26.0",
 ]
+
+[tool.hatch.version]
+path = "src/web3_mcp/__version__.py"
