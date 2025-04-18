@@ -10,6 +10,24 @@ An MCP server implementation wrapping Ankr Advanced API.
 
 FastMCP is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that provides access to Ankr's Advanced API for blockchain data. It allows LLMs to interact with blockchain data across multiple chains including Ethereum, BSC, Polygon, Avalanche, and more.
 
+## MCP Client Setting
+
+```json
+{
+  "mcpServers": {
+    "web3": {
+      "command": "uvx",
+      "args": [
+        "web3-mcp"
+      ],
+      "env": {
+        "ANKR_ENDPOINT": "https://rpc.ankr.com/...",
+      }
+    }
+  }
+}
+```
+
 ## Features
 
 - Complete wrapper for all Ankr Advanced API endpoints
