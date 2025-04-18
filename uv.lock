@@ -1461,7 +1461,6 @@ wheels = [
 
 [[package]]
 name = "web3-mcp"
-version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "ankr-sdk" },
