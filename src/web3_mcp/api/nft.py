@@ -81,7 +81,18 @@ class NFTApi:
 
             result = self.client.nft.get_nfts(ankr_request)
             assets = list(result) if result else []
-            return {"assets": assets, "next_page_token": ""}
+
+            # Serialize NFT objects to dictionaries
+            serialized_assets = []
+            for nft in assets:
+                nft_dict = {}
+                # Add all attributes from the NFT object to the dictionary
+                for attr in dir(nft):
+                    if not attr.startswith("__") and not callable(getattr(nft, attr)):
+                        nft_dict[attr] = getattr(nft, attr)
+                serialized_assets.append(nft_dict)
+
+            return {"assets": serialized_assets, "next_page_token": ""}
         except Exception as e:
             print(f"Error in get_nfts_by_owner: {e}")
             return {"assets": [], "next_page_token": ""}

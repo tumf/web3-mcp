@@ -108,7 +108,8 @@ def init_server(
         """
         return await nft_api.get_nft_holders(request)
 
-    @mcp.tool()
+    # NFT Transfers endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_nft_transfers(request: NFTTransfersRequest) -> Dict[str, Any]:
         """
         Get transfer history for NFTs
@@ -160,7 +161,8 @@ def init_server(
         """
         return await query_api.get_logs(request)
 
-    @mcp.tool()
+    # Transactions by hash endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_transactions_by_hash(request: TransactionsByHashRequest) -> Dict[str, Any]:
         """
         Get transactions by hash
@@ -173,7 +175,8 @@ def init_server(
         """
         return await query_api.get_transactions_by_hash(request)
 
-    @mcp.tool()
+    # Transactions by address endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_transactions_by_address(request: TransactionsByAddressRequest) -> Dict[str, Any]:
         """
         Get transactions by address
@@ -186,7 +189,8 @@ def init_server(
         """
         return await query_api.get_transactions_by_address(request)
 
-    @mcp.tool()
+    # Interactions endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_interactions(request: InteractionsRequest) -> Dict[str, Any]:
         """
         Get wallet interactions with contracts
@@ -212,7 +216,8 @@ def init_server(
         """
         return await token_api.get_account_balance(request)
 
-    @mcp.tool()
+    # Currencies endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_currencies(request: CurrenciesRequest) -> CurrenciesResponse:
         """
         Get available currencies
@@ -238,7 +243,8 @@ def init_server(
         """
         return await token_api.get_token_price(request)
 
-    @mcp.tool()
+    # Token Holders endpoint is not provided as a tool
+    # @mcp.tool()
     async def get_token_holders(request: TokenHoldersRequest) -> TokenHoldersResponse:
         """
         Get token holders
@@ -251,7 +257,8 @@ def init_server(
         """
         return await token_api.get_token_holders(request)
 
-    @mcp.tool()
+    # Token Holders Count endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_token_holders_count(
         request: TokenHoldersCountRequest,
     ) -> TokenHoldersCountResponse:
@@ -266,7 +273,8 @@ def init_server(
         """
         return await token_api.get_token_holders_count(request)
 
-    @mcp.tool()
+    # Token Transfers endpoint is not supported in the current API
+    # @mcp.tool()
     async def get_token_transfers(request: TokenTransfersRequest) -> TokenTransfersResponse:
         """
         Get token transfer history

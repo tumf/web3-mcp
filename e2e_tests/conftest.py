@@ -31,6 +31,16 @@ class DirectClient:
 
             return await NFTApi(self.client).get_nft_metadata(NFTMetadataRequest(**request))
 
+        elif tool_name == "get_nft_holders":
+            from web3_mcp.api.nft import NFTApi, NFTHoldersRequest
+
+            return await NFTApi(self.client).get_nft_holders(NFTHoldersRequest(**request))
+
+        elif tool_name == "get_nft_transfers":
+            from web3_mcp.api.nft import NFTApi, NFTTransfersRequest
+
+            return await NFTApi(self.client).get_nft_transfers(NFTTransfersRequest(**request))
+
         elif tool_name == "get_blockchain_stats":
             from web3_mcp.api.query import BlockchainStatsRequest, QueryApi
 
@@ -43,6 +53,30 @@ class DirectClient:
 
             return await QueryApi(self.client).get_blocks(BlocksRequest(**request))
 
+        elif tool_name == "get_logs":
+            from web3_mcp.api.query import LogsRequest, QueryApi
+
+            return await QueryApi(self.client).get_logs(LogsRequest(**request))
+
+        elif tool_name == "get_transactions_by_hash":
+            from web3_mcp.api.query import QueryApi, TransactionsByHashRequest
+
+            return await QueryApi(self.client).get_transactions_by_hash(
+                TransactionsByHashRequest(**request)
+            )
+
+        elif tool_name == "get_transactions_by_address":
+            from web3_mcp.api.query import QueryApi, TransactionsByAddressRequest
+
+            return await QueryApi(self.client).get_transactions_by_address(
+                TransactionsByAddressRequest(**request)
+            )
+
+        elif tool_name == "get_interactions":
+            from web3_mcp.api.query import InteractionsRequest, QueryApi
+
+            return await QueryApi(self.client).get_interactions(InteractionsRequest(**request))
+
         elif tool_name == "get_account_balance":
             from web3_mcp.api.token import AccountBalanceRequest, TokenApi
 
@@ -52,6 +86,34 @@ class DirectClient:
             from web3_mcp.api.token import TokenApi, TokenPriceRequest
 
             return await TokenApi(self.client).get_token_price(TokenPriceRequest(**request))
+
+        elif tool_name == "get_currencies":
+            from web3_mcp.api.token import CurrenciesRequest, TokenApi
+
+            return await TokenApi(self.client).get_currencies(CurrenciesRequest(**request))
+
+        # Token Holdersエンドポイントはサポートしていないため、コメントアウト
+        # elif tool_name == "get_token_holders":
+        #     from web3_mcp.api.token import TokenApi, TokenHoldersRequest
+        #
+        #     return await TokenApi(self.client).get_token_holders(TokenHoldersRequest(**request))
+
+        elif tool_name == "get_token_holders_count":
+            from web3_mcp.api.token import TokenApi, TokenHoldersCountRequest
+
+            return await TokenApi(self.client).get_token_holders_count(
+                TokenHoldersCountRequest(**request)
+            )
+
+        elif tool_name == "get_token_transfers":
+            from web3_mcp.api.token import TokenApi, TokenTransfersRequest
+
+            return await TokenApi(self.client).get_token_transfers(TokenTransfersRequest(**request))
+
+        elif tool_name == "get_supported_networks":
+            from web3_mcp.constants import SUPPORTED_NETWORKS
+
+            return SUPPORTED_NETWORKS
 
         else:
             raise ValueError(f"Unknown tool: {tool_name}")

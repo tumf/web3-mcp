@@ -32,6 +32,7 @@ class TokenPriceRequest(BaseModel):
     contract_address: str
 
 
+# Not provided as a tool, but needed for internal functionality
 class TokenHoldersRequest(BaseModel):
     blockchain: str
     contract_address: str
@@ -67,6 +68,7 @@ class TokenPriceResponse(BaseModel):
     prices: List[Dict[str, Any]]
 
 
+# Not provided as a tool, but needed for internal functionality
 class TokenHoldersResponse(BaseModel):
     holders: List[Dict[str, Any]]
     next_page_token: str = ""
@@ -163,6 +165,7 @@ class TokenApi:
 
         return {"price_usd": str(price_value)}
 
+    # Not provided as a tool, but needed for internal functionality
     async def get_token_holders(self, request: TokenHoldersRequest) -> TokenHoldersResponse:
         """Get token holders"""
         from ankr.types import GetTokenHoldersRequest
