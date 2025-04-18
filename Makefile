@@ -108,7 +108,11 @@ bump-patch:
 	new_patch=$$((patch + 1)); \
 	new_version="$$major.$$minor.$$new_patch"; \
 	echo "Updating version to $$new_version"; \
-	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE); \
+	git add $(VERSION_FILE); \
+	git commit -m "Bump version to $$new_version"; \
+	git tag -a v$$new_version -m "Version $$new_version"; \
+	echo "Version updated to $$new_version. Don't forget to push with: git push && git push --tags"
 
 # Bump minor version (0.x.0)
 bump-minor:
@@ -117,7 +121,11 @@ bump-minor:
 	new_minor=$$((minor + 1)); \
 	new_version="$$major.$$new_minor.0"; \
 	echo "Updating version to $$new_version"; \
-	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE); \
+	git add $(VERSION_FILE); \
+	git commit -m "Bump version to $$new_version"; \
+	git tag -a v$$new_version -m "Version $$new_version"; \
+	echo "Version updated to $$new_version. Don't forget to push with: git push && git push --tags"
 
 # Bump major version (x.0.0)
 bump-major:
@@ -126,7 +134,11 @@ bump-major:
 	new_major=$$((major + 1)); \
 	new_version="$$new_major.0.0"; \
 	echo "Updating version to $$new_version"; \
-	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE)
+	sed -i '' "s/__version__ = \".*\"/__version__ = \"$$new_version\"/" $(VERSION_FILE); \
+	git add $(VERSION_FILE); \
+	git commit -m "Bump version to $$new_version"; \
+	git tag -a v$$new_version -m "Version $$new_version"; \
+	echo "Version updated to $$new_version. Don't forget to push with: git push && git push --tags"
 
 # Bump beta version (x.x.x-beta)
 bump-beta:
@@ -139,3 +151,7 @@ e2e-test:
 
 e2e-test-mock:
 	uv run python -m pytest e2e_tests/test_mock.py -v
+
+# Push version changes and tags
+push-version:
+	git push && git push --tags
