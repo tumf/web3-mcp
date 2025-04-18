@@ -448,35 +448,31 @@ wheels = [
 ]
 
 [[package]]
-name = "fastapi"
-version = "0.115.12"
+name = "exceptiongroup"
+version = "1.2.2"
 source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "pydantic" },
-    { name = "starlette" },
-    { name = "typing-extensions" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/f4/55/ae499352d82338331ca1e28c7f4a63bfd09479b16395dce38cf50a39e2c2/fastapi-0.115.12.tar.gz", hash = "sha256:1e2c2a2646905f9e83d32f04a3f86aff4a286669c6c950ca95b5fd68c2602681", size = 295236 }
+sdist = { url = "https://files.pythonhosted.org/packages/09/35/2495c4ac46b980e4ca1f6ad6db102322ef3ad2410b79fdde159a4b0f3b92/exceptiongroup-1.2.2.tar.gz", hash = "sha256:47c2edf7c6738fafb49fd34290706d1a1a2f4d1c6df275526b62cbb4aa5393cc", size = 28883 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/50/b3/b51f09c2ba432a576fe63758bddc81f78f0c6309d9e5c10d194313bf021e/fastapi-0.115.12-py3-none-any.whl", hash = "sha256:e94613d6c05e27be7ffebdd6ea5f388112e5e430c8f7d6494a9d1d88d43e814d", size = 95164 },
+    { url = "https://files.pythonhosted.org/packages/02/cc/b7e31358aac6ed1ef2bb790a9746ac2c69bcb3c8588b41616914eb106eaf/exceptiongroup-1.2.2-py3-none-any.whl", hash = "sha256:3111b9d131c238bec2f8f516e123e14ba243563fb135d3fe885990585aa7795b", size = 16453 },
 ]
 
 [[package]]
 name = "fastmcp"
-version = "2.1.2"
+version = "2.2.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "dotenv" },
-    { name = "fastapi" },
+    { name = "exceptiongroup" },
+    { name = "httpx" },
     { name = "mcp" },
     { name = "openapi-pydantic" },
     { name = "rich" },
     { name = "typer" },
     { name = "websockets" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/ae/7c/bc08df6967b58f1ebf403618c69aa88425757a28190877943c4720bb1a7d/fastmcp-2.1.2.tar.gz", hash = "sha256:0098eb57ce9862582c30c619da4c5d8f52757e433baa18407743c2e9c48f32aa", size = 911145 }
+sdist = { url = "https://files.pythonhosted.org/packages/e8/5f/0ad05fb3cca4529a994a7446da554c0ecf2a91bcf3a076261e29b5043ff1/fastmcp-2.2.0.tar.gz", hash = "sha256:4d9373705ebd9e3de807005ed732b8955c6eb74e4b47595752f461c1c689f231", size = 918342 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/67/35/f7a312e5b2a5637b4a62777cf72f3c29a3a149f2ecdb7fbba916b74c22cd/fastmcp-2.1.2-py3-none-any.whl", hash = "sha256:24584059ec5b6dabacb273aca4ccb852bd184ca87c495fdce50376a6eb28faaf", size = 74289 },
+    { url = "https://files.pythonhosted.org/packages/69/1d/266a86204e658d9133382e7f260d4cabb75fb18ac2e03efc953e25ebe20f/fastmcp-2.2.0-py3-none-any.whl", hash = "sha256:077bdf3f37f423688f1356db0f6ed0864e001de712bce41ad4939fa8b38d7149", size = 75793 },
 ]
 
 [[package]]
@@ -1487,7 +1483,7 @@ dev = [
 requires-dist = [
     { name = "ankr-sdk", specifier = ">=1.0.2" },
     { name = "black", marker = "extra == 'dev'", specifier = ">=25.1.0" },
-    { name = "fastmcp", specifier = ">=2.1.2" },
+    { name = "fastmcp", specifier = ">=2.2.0" },
     { name = "isort", marker = "extra == 'dev'", specifier = ">=6.0.1" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.15.0" },
     { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.2.0" },
