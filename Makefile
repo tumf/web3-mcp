@@ -103,21 +103,30 @@ PATCH := $(shell echo $(VERSION_BASE) | cut -d. -f3)
 
 # Bump patch version (0.0.x)
 bump-patch:
-	$(eval NEW_PATCH := $(shell echo $$(($(PATCH) + 1))))
-	$(eval NEW_VERSION := $(MAJOR).$(MINOR).$(NEW_PATCH))
-	$(call update_version,$(NEW_VERSION))
+	@current_version=$$(grep -o '".*"' $(VERSION_FILE) | sed 's/"//g'); \
+	IFS='.' read -r major minor patch <<< "$$current_version"; \
+	new_patch=$$((patch + 1)); \
+	new_version="$$major.$$minor.$$new_patch"; \
+	echo "Updating version to $$new_version"; \
+	sed -i '' "s/$$current_version/$$new_version/" $(VERSION_FILE)
 
 # Bump minor version (0.x.0)
 bump-minor:
-	$(eval NEW_MINOR := $(shell echo $$(($(MINOR) + 1))))
-	$(eval NEW_VERSION := $(MAJOR).$(NEW_MINOR).0)
-	$(call update_version,$(NEW_VERSION))
+	@current_version=$$(grep -o '".*"' $(VERSION_FILE) | sed 's/"//g'); \
+	IFS='.' read -r major minor patch <<< "$$current_version"; \
+	new_minor=$$((minor + 1)); \
+	new_version="$$major.$$new_minor.0"; \
+	echo "Updating version to $$new_version"; \
+	sed -i '' "s/$$current_version/$$new_version/" $(VERSION_FILE)
 
 # Bump major version (x.0.0)
 bump-major:
-	$(eval NEW_MAJOR := $(shell echo $$(($(MAJOR) + 1))))
-	$(eval NEW_VERSION := $(NEW_MAJOR).0.0)
-	$(call update_version,$(NEW_VERSION))
+	@current_version=$$(grep -o '".*"' $(VERSION_FILE) | sed 's/"//g'); \
+	IFS='.' read -r major minor patch <<< "$$current_version"; \
+	new_major=$$((major + 1)); \
+	new_version="$$new_major.0.0"; \
+	echo "Updating version to $$new_version"; \
+	sed -i '' "s/$$current_version/$$new_version/" $(VERSION_FILE)
 
 # Bump beta version (x.x.x-beta)
 bump-beta:

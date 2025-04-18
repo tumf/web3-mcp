@@ -54,3 +54,4 @@ dev = [
 
 [tool.hatch.version]
 path = "src/web3_mcp/__version__.py"
+pattern = "__version__ = \"(?P<version>.+)\""
