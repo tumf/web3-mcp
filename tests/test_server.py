@@ -29,21 +29,24 @@ def mock_ankr_web3() -> Generator[MagicMock, None, None]:
         yield mock_client
 
 
-def test_server_initialization(mock_ankr_web3: MagicMock) -> None:
+@pytest.mark.asyncio
+async def test_server_initialization(mock_ankr_web3: MagicMock) -> None:
     """Test server initialization"""
     mcp = init_server(name="Test Server")
 
     assert mcp.name == "Test Server"
 
-    tools = mcp.list_tools()
+    tools = await mcp.get_tools()
     assert len(tools) > 0
 
 
-def test_utility_tools(mock_ankr_web3: MagicMock) -> None:
+@pytest.mark.asyncio
+async def test_utility_tools(mock_ankr_web3: MagicMock) -> None:
     """Test utility tools"""
     mcp = init_server(name="Test Server")
 
-    tools = mcp.list_tools()
+    tools = await mcp.get_tools()
+    tool_names = list(tools.keys())
 
     expected_tools = [
         "get_nfts_by_owner",
@@ -65,12 +68,11 @@ def test_utility_tools(mock_ankr_web3: MagicMock) -> None:
         "get_supported_networks",
     ]
 
-    tool_names = [tool.name for tool in tools]
     for expected_tool in expected_tools:
         assert expected_tool in tool_names
 
-    resources = mcp.list_resources()
-    resource_uris = [str(resource.uri) for resource in resources]
+    resources = await mcp.get_resources()
+    resource_uris = list(resources.keys())
     assert "ankr://info" in resource_uris
 
 
