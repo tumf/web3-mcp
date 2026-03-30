@@ -7,6 +7,10 @@
 
 An MCP server implementation wrapping Ankr Advanced API.
 
+## Hosted deployment
+
+A hosted deployment is available on [Fronteir AI](https://fronteir.ai/mcp/tumf-web3-mcp).
+
 ## Overview
 
 FastMCP is a [Model Context Protocol (MCP)](https://modelcontextprotocol.io) server that provides access to Ankr's Advanced API for blockchain data. It allows LLMs to interact with blockchain data across multiple chains including Ethereum, BSC, Polygon, Avalanche, and more.
